@@ -26,6 +26,8 @@ def join():
 def play():
     if request.method == 'GET':
         return render_template("play.html")
+    if request.method == 'POST':
+        return redirect(url_for('create'))
 
 # Play solo page
 @app.route("/solo", methods=['GET', 'POST'])
