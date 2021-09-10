@@ -12,7 +12,16 @@ def generate_question():
     Question = ""
     Answer = ""
 
-    page = wikipedia.random()
+    pageName = wikipedia.random()
 
-    print("Page")
+    page = wikipedia.page(title=pageName)
+    print(page.title)
+
+    summary = page.summary
+    
+    summary = summary.replace(page.title,"_______")
+
+    print(summary)
+
+generate_question()
 
