@@ -9,4 +9,5 @@ Python based code that uses the wikipedia python package to generate questions
 ## Frontend
 
 I dunno James, you can put something here. 
+James: yeah flask lol. HTML templates.
 
