@@ -21,7 +21,7 @@ def generate_question():
     random_page = random.choice(links)
 
     search_results = wikipedia.search(random_page)
-    
+
     print(search_results[0])
     question_page = wikipedia.page(title=search_results[0])
 
@@ -37,3 +37,6 @@ def generate_question():
 
 generate_question()
 
+# match = re.match('^[^(]+', title)
+#     title = title[match.span()[0]:match.span()[1]]
+#     print(title)
