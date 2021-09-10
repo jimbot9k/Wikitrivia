@@ -7,21 +7,33 @@ Backend for generating questions
 
 #Prerequisites 
 import wikipedia
+import random
+import re
+from wikipedia.wikipedia import WikipediaPage
 
 def generate_question():
     Question = ""
     Answer = ""
 
-    pageName = wikipedia.random()
+    page = wikipedia.page(title="Wikipedia:Multiyear ranking of most viewed pages")
+    links = page.links
 
-    page = wikipedia.page(title=pageName)
-    print(page.title)
+    random_page = random.choice(links)
 
-    summary = page.summary
+    search_results = wikipedia.search(random_page)
     
-    summary = summary.replace(page.title,"_______")
+    print(search_results[0])
+    question_page = wikipedia.page(title=search_results[0])
 
+    page_title = question_page.title
+
+    summary = question_page.summary
+    
+    summary = summary.replace(question_page.title,"_______")
+
+    print(question_page.title)
     print(summary)
+
 
 generate_question()
 
