@@ -9,6 +9,8 @@ wikipedia = "*"
 nltk = "*"
 flask = "*"
 numpy = "*"
+flask-assets = "*"
+flask-socketio = "*"
 
 [dev-packages]
 pylint = "*"
