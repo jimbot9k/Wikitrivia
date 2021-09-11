@@ -238,6 +238,12 @@ def generate_question(question_set="top annual"):
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
             page_title = strip_brackets(question_page.title)
             print(page_title)
+            summary = remove_subject(page_title, question_page.summary)
+
+            splitSummary = nltk.sent_tokenize(summary)
+            if len(splitSummary) < 3:
+                continue
+
             wrong_answers = []
 
             #Reject a page if the title is too long
@@ -259,9 +265,8 @@ def generate_question(question_set="top annual"):
         except:
             pageLoaded = False
 
-    summary = remove_subject(page_title, question_page.summary)
 
-    splitSummary = nltk.sent_tokenize(summary)
+
 
     try:
         summary = splitSummary[0] + "." + splitSummary[1] + "." + splitSummary[2] + "."
