@@ -6,6 +6,7 @@ import random
 import re
 import nltk
 from difflib import SequenceMatcher
+import pandas as pd
 
 #Download natural language packages
 path = './nltk_modules'
@@ -25,7 +26,8 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 def strip_brackets(text):
-    return re.sub('\(.*\)', "", text)
+    #return re.sub('\(.*\)', "", text)
+    return re.sub(r"\([^()]*\)", "", text)
 
 def fetch_named_entities(text):
     names = []
@@ -103,21 +105,38 @@ def generate_question(question_set="top annual"):
     Question = ""
     Answer = ""
 
-    random.seed(101)
+    #random.seed(101)
 
     #Parse the argument for the question 
     if question_set == "top annual":
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
+        list_page = wikipedia.page(title=page_to_use)
+        links = list_page.links
+
     elif question_set == "weekly 5000":
-        page_to_use = "https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages"
+        page_to_use = "Top 5000 weekly"
+        table_top_5000 = pd.read_html('https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages')
+        df = table_top_5000[3]
+        articles = df['Article'].to_list()
+        links = articles
+
+    elif question_set == "random":
+        page_to_use = "Fully Random Question -Good luck"
+
+        #Iterate to get a good link
+        gotGoodLink = False
+        while gotGoodLink == False:
+            links = [wikipedia.random()]
+            if len(links[0].split(" ")) < 4 and not ("(" in links[0]):
+                gotGoodLink = True
+        
+        list_page = wikipedia.page(title=links[0])
     else:
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
     
-    #Load the page with the list of pages
-    list_page = wikipedia.page(title=page_to_use)
-    links = list_page.links
     print(page_to_use)
     print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
@@ -126,9 +145,9 @@ def generate_question(question_set="top annual"):
 
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
-
             question_page_title = random_page
 
+            print(random_page)
             #Reject a page if the title is too long
             #words = nltk.word_tokenize(question_page.title)
             words = nltk.word_tokenize(random_page)
@@ -143,13 +162,35 @@ def generate_question(question_set="top annual"):
                 pageLoaded = False
         except:
             pageLoaded = False
-    
+        
+    summary = remove_subject(question_page_title, question_page.summary)
+
+    try:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+    except:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
+
+    return (question_page_title,summary)
+
+def get_wrong_asnwers(answer):
+    """
+    Generate the wrong answers for a correct answer
+    """
     #############################################################
     # Generating Wrong answers
     #############################################################
+    wrong_answers =[None, None, None]
+    for i in range(3):
+        alternateFound = False
+        while alternateFound == False:
+            potentialAnswer = random.choice(category_page.links)
+            if len(potentialAnswer.split(" ")) == len(question_page_title.split(" ")):
+                alternateFound = True
+                wrong_answers[i] = (potentialAnswer)
+
     #Get the page title and print it
-    page_title = strip_brackets(random_page)
-    print(random_page)
+    page_title = strip_brackets(answer)
+    print(answer)
 
     #Get a list of the page categories
     page_categories = question_page.categories
@@ -164,33 +205,10 @@ def generate_question(question_set="top annual"):
     category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
     print(category_page.content)
 
-    wrong_answers =[None, None, None]
-    for i in range(3):
-        alternateFound = False
-        while alternateFound == False:
-            potentialAnswer = random.choice(category_page.links)
-            if len(potentialAnswer.split(" ")) == len(page_title.split(" ")):
-                alternateFound = True
-                wrong_answers[i] = (potentialAnswer)
-        
-    summary = remove_subject(page_title, question_page.summary)
-    try:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
-    except:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
-
-    print(question_page_title)
-    print(wrong_answers[0])
-    print(wrong_answers[1])
-    print(wrong_answers[2])
-    print(summary)
-
-
-
-    return (page_title,summary)
-
-(answer, summary) = generate_question("weekly 5000")
+#(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
+(answer, summary) = generate_question("weekly 5000")
 
-#print(fetch_named_entities(answer))
+print(answer)
+print(summary)
 
