@@ -29,6 +29,7 @@ BLANK_SPACE = "______"
 def strip_brackets(text):
     return re.sub('\(.*\)', "", text)
 
+THEIRAHDOPHJASLDHASLDJHAS
 
 def fetch_named_entities(text):
     names = []
