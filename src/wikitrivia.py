@@ -1,15 +1,9 @@
 """
-WikiTrivia - The Free and Radnom trivia games
-
-Backend for generating questions
-
 """
 #Prerequisites 
 import wikipedia
-
 import random
 import re
-from wikipedia.wikipedia import WikipediaPage
 import nltk
 
 #Download natural language packages
@@ -78,7 +72,7 @@ def generate_question():
     pageLoaded = False
     while pageLoaded == False:
         try:
-            random.seed(100)
+            random.seed(50)
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
             pageLoaded = True
@@ -94,7 +88,6 @@ def generate_question():
 
 
 
-    summary = remove_subject(title, summary)
     print(summary)
 
     return (page_title,summary)
