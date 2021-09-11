@@ -5,8 +5,13 @@ import wikipedia
 import random
 import re
 import nltk
+import pandas as pd                        
+from pytrends.request import TrendReq
+pytrend = TrendReq()
 from difflib import SequenceMatcher
 import pandas as pd
+
+#random.seed(101)
 
 #Download natural language packages
 path = './nltk_modules'
@@ -115,8 +120,6 @@ def generate_question(question_set="top annual"):
     Question = ""
     Answer = ""
 
-    #random.seed(101)
-
     #Parse the argument for the question 
     if question_set == "top annual":
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
@@ -163,6 +166,100 @@ def generate_question(question_set="top annual"):
                 pageLoaded = False
         except:
             pageLoaded = False
+
+    page_title = strip_brackets(random_page)
+    print(random_page)
+
+    
+    '''
+    
+    #############################################################
+    # Generating Wrong answers
+    #############################################################
+    #Get the page title and print it
+
+    #Get a list of the page categories
+    page_categories = question_page.categories
+    good_page_categories = []
+    #Get rid of any that are too long (likely bad links)
+    for i,x in enumerate(page_categories):
+        if len(x.split(" ")) <= 2:
+            good_page_categories.append(x)
+    print(good_page_categories)
+
+    #Get the category page
+    category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
+    print(category_page.content)
+
+    wrong_answers =[None, None, None]
+    for i in range(3):
+        alternateFound = False
+        while alternateFound == False:
+            potentialAnswer = random.choice(category_page.links)
+            if len(potentialAnswer.split(" ")) == len(page_title.split(" ")):
+                alternateFound = True
+                wrong_answers[i] = (potentialAnswer)
+        
+    summary = remove_subject(page_title, question_page.summary)
+    try:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+    except:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
+
+    '''
+
+    summary = remove_subject(page_title, question_page.summary)
+    try:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+    except:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
+
+    print(question_page_title)
+    #print(wrong_answers[0])
+    #print(wrong_answers[1])
+    #print(wrong_answers[2])
+    print(summary)
+
+    answer_suggestions = pytrend.build_payload(kw_list = [question_page_title])
+    #print(answer_suggestions)
+    related_queries = pytrend.related_queries()
+    #wrong_answers = list(related_queries.values())
+
+    for a,b in related_queries.items():
+        #print(a)
+        #print(" ")
+        wrong_answers = b
+
+    ab = False
+    for a in wrong_answers.items():
+
+        if(ab is True):
+            things = a[1]
+        elif(ab is False):
+            thinger = a[1]
+        ab = True
+
+    related_query_list = things['query'].tolist()
+    related_query_lister = thinger['query'].tolist()
+
+    num_words_title = len(question_page_title.split(" "))
+
+    good_related_list = []
+    for thing in related_query_list:
+        temp = len(thing.split(" "))
+        if(temp == num_words_title):
+            good_related_list.append(thing)
+
+    for thing in related_query_lister:
+        temp = len(thing.split(" "))
+        if(temp == num_words_title):
+            good_related_list.append(thing)
+    
+    print(good_related_list)
+        
+    #print(wrong_answers)
+    #related_queries.values()    
+=======
         
     summary = remove_subject(question_page_title, question_page.summary)
 
