@@ -1,7 +1,6 @@
 """
 """
 #Prerequisites 
-import sys
 import wikipedia
 import random
 import re
@@ -168,13 +167,11 @@ def is_good_title(title):
     if len(words) < TOO_LONG:
         for word in words:
             if word in BAD_SUBJECTS:
-                print("Bad subject")
-                sys.stdout.flush()
+                print("Bad subject", flush=True)
                 return False
         return True
     else:
-        print("Too long")
-        sys.stdout.flush()
+        print("Too long", flush=True)
         return False
 
 
@@ -191,11 +188,9 @@ def generate_question(question_set="top annual"):
     -------------------------------------------
     Returns:
 
-    (answer (str), question (str)) : tuple of answer and question 
-                                     stored as strings
+    Question: Question Object
+                            
     """
-    Question = ""
-    Answer = ""
 
     #Parse the argument for the question 
     if question_set == "top annual":
@@ -242,12 +237,10 @@ def generate_question(question_set="top annual"):
                 wrong_answers = wrong_answers[0:3]
             else:
                 pageLoaded = False
-                print("Not enough answers")
-                sys.stdout.flush()
+                print("Not enough answers", flush=True)
                 continue
 
-                print("!!")
-                sys.stdout.flush()
+                print("Good", flush=True)
                 pageLoaded = True
         except:
             pageLoaded = False
