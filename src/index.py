@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Blueprint, render_template, redirect, url_for, request, flash
+from flask import Flask, request, render_template, Blueprint, render_template, redirect, url_for, request, flash, make_response
 import sqlite3
 from flask_assets import Environment
 from flask_socketio import SocketIO, emit, join_room, send
@@ -15,9 +15,11 @@ def index():
     else:
         playerName = request.form['name']
         if ((request.form['type']) == 'Join'):
-            return render_template("join.html", playerName = playerName)
+            resp = make_response(render_template("join.html", playerName = playerName))
         elif ((request.form['type']) == 'Create'):
-            return render_template("create.html", playerName = playerName)
+            resp = make_response(render_template("create.html", playerName = playerName))
+        resp.set_cookie('playerName', playerName)
+        return resp
 
 
 # Create lobby page
@@ -37,8 +39,12 @@ def join():
     if request.method == 'GET':
         return render_template("join.html")
     else:
-        print(request.form)
-        return render_template("joinWait.html", roomID = request.form['room'])
+        roomID = request.form['room']
+        resp =  make_response(render_template("joinWait.html", roomID = roomID))
+        resp.set_cookie('roomID', roomID)
+        return resp
+
+        
 
 # Play game page
 @app.route("/play", methods=['GET', 'POST'])
