@@ -26,6 +26,8 @@ def index():
 @app.route("/create", methods=['GET', 'POST'])
 def create():
     playerName = request.cookies.get('playerName')
+    if not playerName:
+        return render_template("index.html")
     if request.method == 'GET':
         return render_template("create.html", playerName=playerName)
     else:

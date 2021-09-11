@@ -1,0 +1,29 @@
+#indexForm {
+    color:black;
+    background-color: white;
+    text-align: center;
+
+}
+
+#indexName {
+    width: 100%;
+    text-align: center;
+}
+
+#indexRoomID     {
+    width: 100%;
+    text-align: center;
+}
+
+.indexButton {
+    width: 50%;
+}
+
+h1 {
+    color: black;
+    background-color: lightgray;
+    text-align: center;
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+}
