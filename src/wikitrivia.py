@@ -4,7 +4,6 @@ WikiTrivia - The Free and Radnom trivia games
 Backend for generating questions
 
 """
-
 #Prerequisites 
 import wikipedia
 import re
