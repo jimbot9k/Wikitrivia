@@ -25,12 +25,20 @@ def index():
 def create():
     if request.method == 'GET':
         return render_template("create.html")
+    else:
+        if ((request.form['type']) == 'Host'):
+            return render_template("createWait.html")
+        elif ((request.form['type']) == 'Solo'):
+            return render_template("solo.html")
 
 # Join game page
 @app.route("/join", methods=['GET', 'POST'])
 def join():
     if request.method == 'GET':
         return render_template("join.html")
+    else:
+        print(request.form)
+        return render_template("joinWait.html", roomID = request.form['room'])
 
 # Play game page
 @app.route("/play", methods=['GET', 'POST'])
