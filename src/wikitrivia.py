@@ -9,6 +9,7 @@ import pandas as pd
 from pytrends.request import TrendReq
 pytrend = TrendReq()
 from difflib import SequenceMatcher
+import pandas as pd
 
 #random.seed(101)
 
@@ -30,7 +31,8 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 def strip_brackets(text):
-    return re.sub('\(.*\)', "", text)
+    #return re.sub('\(.*\)', "", text)
+    return re.sub(r"\([^()]*\)", "", text)
 
 def fetch_named_entities(text):
     names = []
@@ -85,8 +87,18 @@ def remove_subject(subject, text):
     for item in remove_list:
         questions = questions.replace(item, BLANK_SPACE)
 
-                        
     return questions
+
+def is_same_type(a, b):
+    named_a = fetch_named_entities(a)
+    named_b = fetch_named_entities(b)
+    for word_a in named_a:
+        for word_b in named_a:
+            if word_a[0] != word_b[0]:
+                print(word_a, "!=", word_b)
+                return False
+    return True
+
 
 
 def generate_question(question_set="top annual"):
@@ -111,16 +123,24 @@ def generate_question(question_set="top annual"):
     #Parse the argument for the question 
     if question_set == "top annual":
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
+        list_page = wikipedia.page(title=page_to_use)
+        links = list_page.links
+
     elif question_set == "weekly 5000":
-        page_to_use = "https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages"
+        page_to_use = "Top 5000 weekly"
+        table_top_5000 = pd.read_html('https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages')
+        df = table_top_5000[3]
+        articles = df['Article'].to_list()
+        links = articles
+
+    elif question_set == "random":
+        page_to_use = "Fully Random Question -Good luck"
     else:
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
     
-    #Load the page with the list of pages
-    list_page = wikipedia.page(title=page_to_use)
-    links = list_page.links
     print(page_to_use)
     print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
@@ -129,9 +149,9 @@ def generate_question(question_set="top annual"):
 
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
-
             question_page_title = random_page
 
+            print(random_page)
             #Reject a page if the title is too long
             #words = nltk.word_tokenize(question_page.title)
             words = nltk.word_tokenize(random_page)
@@ -239,12 +259,24 @@ def generate_question(question_set="top annual"):
         
     #print(wrong_answers)
     #related_queries.values()    
+=======
+        
+    summary = remove_subject(question_page_title, question_page.summary)
 
+    splitSummary = nltk.sent_tokenize(summary)
 
-    return (page_title,summary)
+    try:
+        summary = splitSummary[0] + "." + splitSummary[1] + "." + splitSummary[2] + "."
+    except:
+        summary = splitSummary[0] + "." + splitSummary[1] + "."
 
-(answer, summary) = generate_question("weekly 5000")
+    return (question_page_title,summary)
+
+#(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
+(answer, summary) = generate_question("weekly 5000")
 
-#print(fetch_named_entities(answer))
+
+print(answer)
+print(summary)
 
