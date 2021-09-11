@@ -1,3 +1,6 @@
+from question import MultiQuestion
+from wikitrivia import generate_question
+import random
 """
 Game - Class to manage games of Wikitrivia
 """
@@ -7,8 +10,7 @@ class Game:
         self.roomID = roomID
         self.players = players
         self.host = host
-        self.currentQuestion = None
-        self.correctAnswer = 0
+
         self.playerAnswers= {}
         for player in players:
             self.playerAnswers[player] = 0
@@ -16,8 +18,25 @@ class Game:
         for player in players:
             self.scores[player] = 0
 
+        self.currentQuestion = generate_question()
+        print(self.currentQuestion.get_question())
+        self.correctAnswer = random.randint(1,5)
+
     def add_player(self, player):
         self.players[player] = 0
+
+    def get_question(self):
+        return self.currentQuestion
+
+    def get_answers(self):
+        answers = {}
+        answers[self.correctAnswer] = self.get_question().get_answer()
+        j = 0
+        for i in range(1, 5):
+            if not i == self.correctAnswer:
+                answers[i] = self.get_question().get_falseAnswers()[j]
+                j += 1
+        return answers
     
     def answer_question(self, player, answer):
         self.playerAnswers[player] = answer

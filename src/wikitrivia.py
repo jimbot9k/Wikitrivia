@@ -277,7 +277,7 @@ def generate_question(question_set="top annual"):
 
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
-question = generate_question("weekly 5000")
-print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
+#question = generate_question("weekly 5000")
+#print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
 #Maybe add some movies or actors etc pages so you can have specific categories.

@@ -54,6 +54,12 @@ def create_game(json):
     msg = {}
     msg["players"] = games[roomID].get_player_list()
     emit('updatePlayers', JSON.dumps(msg), to=roomID)
+    msg = {}
+    msg["question"] = games[roomID].get_question().get_question()
+    for answer in games[roomID].get_answers():
+        msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+    emit('updateQuestion', JSON.dumps(msg), to=roomID)
+
 
 @socketio.on("joinGame")
 def join_game(json):

@@ -70,6 +70,16 @@ socket.on("updatePlayers", (data) => {
     updatePlayers(newPlayers)
 });
 
+socket.on("updateQuestion", (data) => {
+    question = JSON.parse(data)['question']
+    answer1 = JSON.parse(data)['answer1']
+    answer2 = JSON.parse(data)['answer2']
+    answer3 = JSON.parse(data)['answer3']
+    answer4 = JSON.parse(data)['answer4']
+    updateQuestion(question)
+    updateAnswers(answer1, answer2, answer3, answer4)
+});
+
 
 
 
