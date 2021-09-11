@@ -95,6 +95,7 @@ def generate_question(question_set="top annual"):
         question set: (str)
             - "top annual" : Use the top annual views list
             - "weekly 5000" : Use the weekly top 5000 views list
+            - "random" : Use a completely random wikipedia page
 
     -------------------------------------------
     Returns:
@@ -127,7 +128,8 @@ def generate_question(question_set="top annual"):
         gotGoodLink = False
         while gotGoodLink == False:
             links = [wikipedia.random()]
-            if len(links[0].split(" ")) < 4 and not ("(" in links[0]):
+            #if len(links[0].split(" ")) < 4 and not ("(" in links[0]):
+            if len(links[0].split(" ")) < 4:
                 gotGoodLink = True
         
         list_page = wikipedia.page(title=links[0])
@@ -151,7 +153,7 @@ def generate_question(question_set="top annual"):
             #Reject a page if the title is too long
             #words = nltk.word_tokenize(question_page.title)
             words = nltk.word_tokenize(random_page)
-
+            print(len(words))
             if len(words) < 4:
                 for word in words:
                     if word in BAD_SUBJECTS:
@@ -172,10 +174,15 @@ def generate_question(question_set="top annual"):
 
     return (question_page_title,summary)
 
-#(answer, summary) = generate_question("random")
-#(answer, summary) = generate_question("top annual")
+# (answer, summary) = generate_question("random")
+# print(answer)
+# print(summary)
+# (answer, summary) = generate_question("top annual")
+# print(answer)
+# print(summary)
 (answer, summary) = generate_question("weekly 5000")
-
 print(answer)
 print(summary)
+
+
 
