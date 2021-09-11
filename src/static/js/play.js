@@ -1,6 +1,6 @@
 const URL = "http://localhost:5000";
-const playerName = document.cookie.split(';')[0].split('=')[1]
-const roomID = document.cookie.split(';')[1].split('=')[1]
+const playerName = document.cookie.split(';')[1].split('=')[1]
+const roomID = document.cookie.split(';')[0].split('=')[1]
 const type = document.cookie.split(';')[2].split('=')[1]
 const gameRunning = 1
 
@@ -15,7 +15,7 @@ function updateQuestion(question) {
 }
 
 function updatePlayers(players) {
-    document.getElementById("playerList").innerHTML = players;
+    document.getElementById("playerListText").innerHTML = players;
 }
 
 function updateAnswers(answer1, answer2, answer3, answer4) {
@@ -25,58 +25,52 @@ function updateAnswers(answer1, answer2, answer3, answer4) {
     document.getElementById("answer4").innerHTML = answer4;
 }
 
-function sendEndRound(roomID, playerName) {
-    const msg = {roomID:roomID, playerName:playerName};
-    socket.emit('endRound', msg);
+function endRound(roomID, playerName) {
+    console.log("end pls")
+    const msg = {roomID:roomID};
+    socket.emit("endRound", msg, to=roomID);
 }
 
 function sendAnswer(roomID, playerName, option) {
     const msg = {roomID:roomID, playerName:playerName, option:option};
-    socket.emit('sendAnswer', msg);
+    socket.emit("sendAnswer", msg, to=roomid);
+}
+
+function getPlayers(roomID) {
+    const msg = {roomID:roomID};
+    response = socket.emit("getPlayers", msg);
 }
 
 function createGame(playerName, roomID) {
-    console.log("2")
-}
-
-function sendStartGame(playerName, roomID) {
-    console.log("2")
-}
-
-function startGame(playerName, roomID) {
-    console.log("2")
-}
-
-function createGame(playerName, roomID) {
-    console.log("2")
+    const msg = {roomID:roomID, playerName:playerName};
+    console.log(msg)
+    socket.emit("createGame", msg);
 }
 
 function joinGame(playerName, roomID) {
     const msg = {roomID:roomID, playerName:playerName};
-    socket.emit('joinGame', msg);
+    socket.emit("joinGame", msg);
 }
 
 function initialise(type, playerName, roomID) {
-    if (type == "create") {
+    console.log(type)
+    if (type == "Create") {
         createGame(playerName, roomID);
-    } else if (type == "join") {
+    } else if (type == "Join") {
         joinGame(playerName, roomID);
     }
 }
 
-function lol(){
-    updatePlayers("FUCK YEAH");
-    updateAnswers("123", "456", "789", "111");
-    updateQuestion("Chase Straight?");
-}
-
-function endRound() {
-    console.log("1");
-}
-
-
 socket.connect();
+console.log(type)
 initialise(type, playerName, roomID)
+
+socket.on("updatePlayers", (data) => {
+    newPlayers = JSON.parse(data)['players']
+    updatePlayers(newPlayers)
+});
+
+
 
 
 
