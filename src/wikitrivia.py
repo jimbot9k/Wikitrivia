@@ -19,6 +19,8 @@ nltk.download('words', download_dir=path, quiet=True)
 
 BLANK_SPACE = "______"
 
+BAD_SUBJECTS = ['Wikipedia']
+
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
@@ -39,7 +41,7 @@ def fetch_named_entities(text):
 def remove_subject(subject, text):
     remove_list = []
     questions = strip_brackets(text)
-    subject_split = subject.split(" ")
+    subject_split = nltk.word_tokenize(subject)
     for string in subject_split:
         remove_list.append(string)
         #Case sensitivity
@@ -56,6 +58,7 @@ def remove_subject(subject, text):
             subject_synsets.append(syn)
 
     for item in text_labels:
+        #String similarity check 0.75 arbritrary number
         for token in subject_split:
             if similar(item[1], token) > 0.75:
                 print(item[1], " : ", token, similar(item[1], token))
@@ -117,18 +120,23 @@ def generate_question(question_set="top annual"):
     pageLoaded = False
     while pageLoaded == False:
         try:
-            random.seed(89)
+            #random.seed(100)
             random_page = random.choice(links)
-            # question_page = wikipedia.page(title=random_page,auto_suggest=False)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
+            #question_page = wikipedia.page(title='Estonian Wikipedia',auto_suggest=False)
             question_page_title = question_page.title
 
             #Reject a page if the title is too long
             print("Got here")
             print(question_page_title)
 
-            if len(question_page.title.split(" ")) < 4:
-                pageLoaded = True
+            words = nltk.word_tokenize(question_page.title)
+            if len(words) < 4:
+                for word in words:
+                    if word in BAD_SUBJECTS:
+                        pageLoaded = False
+                        break
+                    pageLoaded = True
             else: 
                 pageLoaded = False
         except:
@@ -137,7 +145,7 @@ def generate_question(question_set="top annual"):
     page_title = strip_brackets(question_page.title)
 
     summary = remove_subject(page_title, question_page.summary)
-    summary = summary.split('.')[0] + "."
+    #summary = summary.split('.')[0] + "."
 
     print(summary)
 
