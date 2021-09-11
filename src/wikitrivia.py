@@ -26,7 +26,7 @@ nltk.download('words', download_dir=path, quiet=True)
 
 BLANK_SPACE = "______"
 
-SIMILAR = 0.6
+SIMILAR = 0.75
 
 TOO_LONG = 4
 
@@ -71,24 +71,24 @@ def get_wrong_answers(page):
     """
     pytrend.build_payload(kw_list = [page])
     related_queries = pytrend.related_queries()
-    wrong_answers = []
+    wrong_answers = {}
 
     for key, value in related_queries[page].items():
         for answer in value['query']:
             answer = answer.title()
 
-            #if is_same_type(answer, page) < SIMILAR and similar(answer, page) < SIMILAR:
-            if similar(answer, page) < SIMILAR:
-                #wrong_answers[answer] = is_same_type(answer, page)
-                #wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1])}
+            #Test to see if subject present in answer and then score how similar its type is (e.g. 'PERSON') then send
+            #that sorted list back and the top 3 will be extracted in get_question
+            test = remove_subject(page, answer)
+            if similar(answer, test) > SIMILAR:
+                wrong_answers[answer] = is_same_type(answer, page)
 
-                wrong_answers.append(answer)
-            #TODO: Tried to implement matching on type, it seems to be too strict ): if anyone has any ideas I can tell them how to fix
-
-
+            wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1], reverse=True)}
 
 
-    return wrong_answers
+
+
+    return list(wrong_answers.keys())
         
 
 
@@ -165,11 +165,14 @@ def is_same_type(a, b):
         return 0
 
     count = 0
-    for word_a, word_b in named_a, named_b:
-        if word_a[0] == word_b[0]:
-            count += 1
+    total = 0
+    for word_a in named_a:
+        for word_b in named_b:
+            if word_a[0] == word_b[0]:
+                count += 1
+            total += 1
 
-    return count / len(named_b)
+    return count / total
 
 
 def is_good_title(title):
