@@ -71,7 +71,7 @@ def get_wrong_answers(page):
     """
     pytrend.build_payload(kw_list = [page])
     related_queries = pytrend.related_queries()
-    wrong_answers = {}
+    wrong_answers = []
 
     for key, value in related_queries[page].items():
         for answer in value['query']:
@@ -88,7 +88,7 @@ def get_wrong_answers(page):
 
 
 
-    return wrong_answers.keys()
+    return wrong_answers
         
 
 
