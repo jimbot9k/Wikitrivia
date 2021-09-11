@@ -20,6 +20,9 @@ nltk.download('averaged_perceptron_tagger', download_dir=path)
 nltk.download('maxent_ne_chunker', download_dir=path)
 nltk.download('words', download_dir=path)
 
+asdasd
+asdasd
+asdas
 
 BLANK_SPACE = "______"
 
