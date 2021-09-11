@@ -172,39 +172,6 @@ def generate_question(question_set="top annual"):
 
     return (question_page_title,summary)
 
-def get_wrong_asnwers(answer):
-    """
-    Generate the wrong answers for a correct answer
-    """
-    #############################################################
-    # Generating Wrong answers
-    #############################################################
-    wrong_answers =[None, None, None]
-    for i in range(3):
-        alternateFound = False
-        while alternateFound == False:
-            potentialAnswer = random.choice(category_page.links)
-            if len(potentialAnswer.split(" ")) == len(question_page_title.split(" ")):
-                alternateFound = True
-                wrong_answers[i] = (potentialAnswer)
-
-    #Get the page title and print it
-    page_title = strip_brackets(answer)
-    print(answer)
-
-    #Get a list of the page categories
-    page_categories = question_page.categories
-    good_page_categories = []
-    #Get rid of any that are too long (likely bad links)
-    for i,x in enumerate(page_categories):
-        if len(x.split(" ")) <= 2:
-            good_page_categories.append(x)
-    print(good_page_categories)
-
-    #Get the category page
-    category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
-    print(category_page.content)
-
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
 (answer, summary) = generate_question("weekly 5000")
