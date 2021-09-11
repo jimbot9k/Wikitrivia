@@ -15,7 +15,7 @@ def index():
     else:
         playerName = request.form['name']
         if ((request.form['type']) == 'Join'):
-            resp = make_response(render_template("join.html", playerName = playerName))
+            resp = make_response(render_template("play.html", playerName = playerName))
         elif ((request.form['type']) == 'Create'):
             resp = make_response(render_template("create.html", playerName = playerName))
         resp.set_cookie('playerName', playerName)
@@ -25,26 +25,14 @@ def index():
 # Create lobby page
 @app.route("/create", methods=['GET', 'POST'])
 def create():
+    playerName = request.cookies.get('playerName')
     if request.method == 'GET':
-        return render_template("create.html")
+        return render_template("create.html", playerName=playerName)
     else:
         if ((request.form['type']) == 'Host'):
-            return render_template("createWait.html")
+            return render_template("play.html")
         elif ((request.form['type']) == 'Solo'):
-            return render_template("solo.html")
-
-# Join game page
-@app.route("/join", methods=['GET', 'POST'])
-def join():
-    if request.method == 'GET':
-        return render_template("join.html")
-    else:
-        roomID = request.form['room']
-        resp =  make_response(render_template("joinWait.html", roomID = roomID))
-        resp.set_cookie('roomID', roomID)
-        return resp
-
-        
+            return render_template("play.html")      
 
 # Play game page
 @app.route("/play", methods=['GET', 'POST'])
@@ -52,25 +40,7 @@ def play():
     if request.method == 'GET':
         return render_template("play.html")
     if request.method == 'POST':
-        return redirect(url_for('create'))
-
-# Play solo page
-@app.route("/solo", methods=['GET', 'POST'])
-def solo():
-    if request.method == 'GET':
-        return render_template("solo.html")
-    
-
-# Joining wait for host page
-@app.route("/joinWait", methods=['GET', 'POST'])
-def joinWait():
-    if request.method == 'GET':
-        return render_template("joinWait.html")
-#  Hosting waiting for players page
-@app.route("/hostWait", methods=['GET', 'POST'])
-def hostWait():
-    if request.method == 'GET':
-        return render_template("hostWait.html")
+        pass
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
