@@ -10,15 +10,17 @@ import random
 import re
 from wikipedia.wikipedia import WikipediaPage
 import nltk
+import contextlib
 
-#Download natural language packages
-path = './nltk_modules'
-nltk.data.path.append(path)
-nltk.download('punkt', download_dir=path)
-nltk.download('wordnet', download_dir=path)
-nltk.download('averaged_perceptron_tagger', download_dir=path)
-nltk.download('maxent_ne_chunker', download_dir=path)
-nltk.download('words', download_dir=path)
+with contextlib.redirect_stdout(None):
+    #Download natural language packages
+    path = './nltk_modules'
+    nltk.data.path.append(path)
+    nltk.download('punkt', download_dir=path,quiet=True)
+    nltk.download('wordnet', download_dir=path,quiet=True)
+    nltk.download('averaged_perceptron_tagger', download_dir=path,quiet=True)
+    nltk.download('maxent_ne_chunker', download_dir=path,quiet=True)
+    nltk.download('words', download_dir=path,quiet=True)
 
 
 BLANK_SPACE = "______"
@@ -46,9 +48,9 @@ def remove_subject(subject, text):
 
     for item in subject_list:
         if item[0] == 'PERSON': #TODO: Generalise to all types
-            if nltk.corpus.wordnet.synsets(item[1]):
+            #if nltk.corpus.wordnet.synsets(item[1]):
                 #print(item, "!!!!!!!")
-                text = text.replace(item[1], BLANK_SPACE)
+            text = text.replace(item[1], BLANK_SPACE)
                     
     subject_split = subject.split(" ")
     for token in subject_split:
@@ -88,7 +90,7 @@ def generate_question():
 
 
     summary = remove_subject(page_title, question_page.summary)
-    summary = summary.split('. ')[0]
+    #summary = summary.split('. ')[0]
 
 
 
@@ -96,5 +98,7 @@ def generate_question():
 
     return (page_title,summary)
 
-generate_question()
+(answer, summary) = generate_question()
+
+#print(fetch_named_entities(answer))
 
