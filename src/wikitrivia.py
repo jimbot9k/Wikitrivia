@@ -80,7 +80,7 @@ def get_wrong_answers(page):
             #Test to see if subject present in answer and then score how similar its type is (e.g. 'PERSON') then send
             #that sorted list back and the top 3 will be extracted in get_question
             test = remove_subject(page, answer)
-            if similar(answer, test) > SIMILAR:
+            if similar(test, answer) > SIMILAR:
                 wrong_answers[answer] = is_same_type(answer, page)
 
             wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1], reverse=True)}
