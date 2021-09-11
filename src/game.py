@@ -36,7 +36,8 @@ class Game:
         answers[self.correctAnswer] = self.get_question().get_answer()
         j = 0
         for i in range(1, 5):
-            if not (i == self.correctAnswer):
+            if (not (i == self.correctAnswer)):
+                print("{x}:{y}".format(x=j,y=self.get_question().get_falseAnswers()[j]))
                 answers[i] = self.get_question().get_falseAnswers()[j]
                 j += 1
         return answers

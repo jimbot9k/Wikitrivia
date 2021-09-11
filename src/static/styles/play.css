@@ -6,8 +6,9 @@ body {
 #playScreen {
     position: absolute;
     background: white;
-    width: 70%;
-    height: 80%;
+    top: 10%;
+    width: 80%;
+    height: 60%;
 }
 
 #question {
@@ -82,8 +83,8 @@ body {
 
 #playerList {
     position: absolute;
-    left: 70%;
-    width: 30%;
+    left: 80%;
+    width: 20%;
     height: 100%;
     color: white;
     border-color: black;
@@ -106,3 +107,48 @@ body {
     height: 20%
 }
 
+#endButton {
+    position: relative;
+    height: 90%;
+    margin: 1% 1% 1% 1%;
+    padding: 0 0 0 0;
+}
+
+#questionTypes {
+    position: relative;
+}
+
+#clock {
+    position: relative;
+    left:50%;
+    top: -100%;
+    width: 40%;
+    margin: 1% 1% 1% 1%;
+
+}
+
+
+#titleScreen {
+    position: absolute;
+    margin: 0 0 0 0;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 10%
+}
+
+#bouncy {
+    position:relative;
+    height: 100%;
+    top: 0;
+    margin: 0 0 0 0;
+}
+
+#titleScreenText {
+    position:absolute;
+    margin: 0 0 0 0;
+    top: 10%;
+    left:40%;
+    width: 80%;
+    font-size:8vh;
+}
