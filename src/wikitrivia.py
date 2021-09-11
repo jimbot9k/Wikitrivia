@@ -10,6 +10,7 @@ import wikipedia
 import re
 import nltk
 
+pytrend = TrendReq()
 #Download natural language packages
 path = './nltk_modules'
 nltk.data.path.append(path)
