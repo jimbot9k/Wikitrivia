@@ -15,28 +15,30 @@ def generate_question():
     Question = ""
     Answer = ""
 
+    #Load the page with the list of pages
     page = wikipedia.page(title="Wikipedia:Multiyear ranking of most viewed pages")
     links = page.links
 
-    random_page = random.choice(links)
-
-    search_results = wikipedia.search(random_page)
-
-    print(search_results[0])
-    question_page = wikipedia.page(title=search_results[0])
+    #Try load a page and keep trying till you get one
+    pageLoaded = False
+    while pageLoaded == False:
+        try:
+            random_page = random.choice(links)
+            question_page = wikipedia.page(title=random_page,auto_suggest=False)
+            pageLoaded = True
+        except:
+            pageLoaded = False
+    
 
     page_title = question_page.title
 
     summary = question_page.summary
     
     summary = summary.replace(question_page.title,"_______")
+    summary = summary.split('. ')[0]
 
     print(question_page.title)
     print(summary)
 
-
 generate_question()
 
-# match = re.match('^[^(]+', title)
-#     title = title[match.span()[0]:match.span()[1]]
-#     print(title)
