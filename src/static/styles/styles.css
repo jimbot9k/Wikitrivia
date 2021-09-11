@@ -1,4 +1,4 @@
-body {    
+#body {
     margin: 0 !important;
     padding: 0 !important;
     width: 0;
@@ -17,20 +17,36 @@ body {
     text-align: center;
 }
 
-#indexName {
-    width: 100%;
-    text-align: center;
+#flexContainer {
+    display: flex;
+    padding: 10px;
+    justify-content: center;
+    gap: 10px;
+    flex-direction: row;
+    /*flex-flow: row wrap;*/
 }
 
-#indexRoomID     {
+#flexItem {
+    padding: 10px;
+
+}
+
+#indexNameInput {
     width: 100%;
-    text-align: center;
+    text-align: left;
+    font-size: 3vw;
+}
+
+#indexRoomInput    {
+    width: 100%;
+    text-align: left;
+    font-size: 3vw;
 }
 
 #indexLogo {
     float: left ;
     width: 20%;
-    height: 10%; 
+    height: 10%;
 }
 
 #indexH1 {
@@ -39,18 +55,21 @@ body {
     height: 50%;
     width: 50%;
     margin: auto;
-    float: center;
     font-size: 10vw;
 }
 
 .indexButton {
     width: 30%;
     height: 20%;
-    font-size: 5vw;
+    font-size: 4vw;
     display: inline-block;
     color: black;
     background-color: gray;
     border-color: black;
     border-width: 10px;
+}
+
+#mainBody {
+    padding-top: 25%;
 }
 

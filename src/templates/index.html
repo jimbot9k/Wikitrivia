@@ -2,28 +2,29 @@
     <html>
         <head>
             <title>WikiTrivia</title>
-            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}"> 
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
         </head>
         <body>
-
             <div id = "indexHeader">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="WikiTrivia" id="indexLogo"> 
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="WikiTrivia" id="indexLogo">
                 <h1 id="indexH1">WikiTrivia</h1>
             </div>
 
+            <div id="mainBody">
             <form action ="/" method="POST" id="indexForm">
-
-                <div id = "indexName">
-                    <input type="text" placeholder="Enter Name" name="name" id="name" required>
-                </div>
-                <div id = "indexRoomID">
-                    <input type="text" placeholder="Enter RoomID" name="room" id="room" required>
+                <div id="flexContainer">
+                    <div id="flexItem">
+                        <input type="text" placeholder="Enter Name" name="name" id="indexNameInput" required>
+                    </div>
+                    <div id="flexItem">
+                        <input type="text" placeholder="Enter RoomID" name="room" id="indexRoomInput" required>
+                    </div>
                 </div>
                 <div id = "indexButtons">
                     <input type="submit" name="type" value="Join" class = "indexButton"/>
                     <input type="submit" name="type" value="Create" class = "indexButton"/>
                 </div>
-                
             </form>
+            </div>
         </body>
-    </html> 
+    </html>
