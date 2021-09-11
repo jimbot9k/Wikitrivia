@@ -19,7 +19,7 @@ nltk.download('words', download_dir=path, quiet=True)
 
 BLANK_SPACE = "______"
 
-BAD_SUBJECTS = ['Wikipedia']
+BAD_SUBJECTS = ['Wikipedia','Wiki']
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
@@ -103,6 +103,8 @@ def generate_question(question_set="top annual"):
     Question = ""
     Answer = ""
 
+    random.seed(101)
+
     #Parse the argument for the question 
     if question_set == "top annual":
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
@@ -114,23 +116,23 @@ def generate_question(question_set="top annual"):
     #Load the page with the list of pages
     list_page = wikipedia.page(title=page_to_use)
     links = list_page.links
-    print("Selecting from : " + list_page.title)
+    print(page_to_use)
+    print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
     while pageLoaded == False:
         try:
-            #random.seed(100)
+
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
-            #question_page = wikipedia.page(title='Estonian Wikipedia',auto_suggest=False)
-            question_page_title = question_page.title
+
+            question_page_title = random_page
 
             #Reject a page if the title is too long
-            print("Got here")
-            print(question_page_title)
+            #words = nltk.word_tokenize(question_page.title)
+            words = nltk.word_tokenize(random_page)
 
-            words = nltk.word_tokenize(question_page.title)
             if len(words) < 4:
                 for word in words:
                     if word in BAD_SUBJECTS:
@@ -142,12 +144,48 @@ def generate_question(question_set="top annual"):
         except:
             pageLoaded = False
     
-    page_title = strip_brackets(question_page.title)
+    #############################################################
+    # Generating Wrong answers
+    #############################################################
+    #Get the page title and print it
+    page_title = strip_brackets(random_page)
+    print(random_page)
 
+    #Get a list of the page categories
+    page_categories = question_page.categories
+    good_page_categories = []
+    #Get rid of any that are too long (likely bad links)
+    for i,x in enumerate(page_categories):
+        if len(x.split(" ")) <= 2:
+            good_page_categories.append(x)
+    print(good_page_categories)
+
+    #Get the category page
+    category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
+    print(category_page.content)
+
+    wrong_answers =[None, None, None]
+    for i in range(3):
+        alternateFound = False
+        while alternateFound == False:
+            potentialAnswer = random.choice(category_page.links)
+            if len(potentialAnswer.split(" ")) == len(page_title.split(" ")):
+                alternateFound = True
+                wrong_answers[i] = (potentialAnswer)
+        
     summary = remove_subject(page_title, question_page.summary)
-    #summary = summary.split('.')[0] + "."
+    try:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+    except:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
 
+    print(question_page_title)
+    print(wrong_answers[0])
+    print(wrong_answers[1])
+    print(wrong_answers[2])
     print(summary)
+
+
 
     return (page_title,summary)
 
