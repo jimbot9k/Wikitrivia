@@ -5,3 +5,5 @@ numpy
 flask-assets
 flask-socketio
 wikipedia
+pandas
+pytrends
