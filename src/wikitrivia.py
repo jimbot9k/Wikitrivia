@@ -4,10 +4,12 @@ WikiTrivia - The Free and Radnom trivia games
 Backend for generating questions
 
 """
-
 #Prerequisites 
 import wikipedia
+
+import random
 import re
+from wikipedia.wikipedia import WikipediaPage
 import nltk
 
 #Download natural language packages
@@ -46,6 +48,7 @@ def remove_subject(subject, text):
     for item in subject_list:
         if item[0] == 'PERSON': #TODO: Generalise to all types
             if nltk.corpus.wordnet.synsets(item[1]):
+                #print(item, "!!!!!!!")
                 text = text.replace(item[1], BLANK_SPACE)
                     
     subject_split = subject.split(" ")
@@ -56,24 +59,44 @@ def remove_subject(subject, text):
 
 
 def generate_question():
+    """
+    Generates a question
+
+    returns:
+
+    (answer (str), question (str)) : tuple of answer and question 
+                                     stored as strings
+    """
     Question = ""
     Answer = ""
 
-    #pageName = wikipedia.random()
+    #Load the page with the list of pages
+    page = wikipedia.page(title="Wikipedia:Multiyear ranking of most viewed pages")
+    links = page.links
 
-    page = wikipedia.page(title='Tupac Shakur')
-    title = page.title
-
-    title = re.sub('\(.*\)', "", title)
-    print(title)
+    #Try load a page and keep trying till you get one
+    pageLoaded = False
+    while pageLoaded == False:
+        try:
+            random_page = random.choice(links)
+            question_page = wikipedia.page(title=random_page,auto_suggest=False)
+            pageLoaded = True
+        except:
+            pageLoaded = False
     
+    page_title = strip_brackets(question_page.title)
+    print(page_title)
 
-    summary = page.summary
-    
-    #summary = summary.replace(page.title, BLANK_SPACE)
+
+    summary = remove_subject(page_title, question_page.summary)
+    summary = summary.split('. ')[0]
+
+
 
     summary = remove_subject(title, summary)
     print(summary)
+
+    return (page_title,summary)
 
 generate_question()
 
