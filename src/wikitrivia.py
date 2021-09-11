@@ -12,6 +12,14 @@ import re
 from wikipedia.wikipedia import WikipediaPage
 
 def generate_question():
+    """
+    Generates a question
+
+    returns:
+
+    (answer (str), question (str)) : tuple of answer and question 
+                                     stored as strings
+    """
     Question = ""
     Answer = ""
 
@@ -29,7 +37,6 @@ def generate_question():
         except:
             pageLoaded = False
     
-
     page_title = question_page.title
 
     summary = question_page.summary
@@ -37,8 +44,10 @@ def generate_question():
     summary = summary.replace(question_page.title,"_______")
     summary = summary.split('. ')[0]
 
-    print(question_page.title)
+    print(page_title)
     print(summary)
+
+    return (page_title,summary)
 
 generate_question()
 
