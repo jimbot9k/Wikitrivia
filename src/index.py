@@ -46,7 +46,7 @@ def create_room(json):
 def join_game(json):
     print(json['roomID'])
     print(json['playerName'])
-
+    print("done")
     send(str(json))
 
 
