@@ -78,11 +78,18 @@ def remove_subject(subject, text):
     return questions
 
 
-def generate_question():
+def generate_question(question_set="top annual"):
     """
     Generates a question
 
-    returns:
+    ---------------------------------------------
+    Arguments:
+        question set: (str)
+            - "top annual" : Use the top annual views list
+            - "weekly 5000" : Use the weekly top 5000 views list
+
+    -------------------------------------------
+    Returns:
 
     (answer (str), question (str)) : tuple of answer and question 
                                      stored as strings
@@ -90,9 +97,18 @@ def generate_question():
     Question = ""
     Answer = ""
 
+    #Parse the argument for the question 
+    if question_set == "top annual":
+        page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
+    elif question_set == "weekly 5000":
+        page_to_use = "https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages"
+    else:
+        page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
+    
     #Load the page with the list of pages
-    page = wikipedia.page(title="Wikipedia:Multiyear ranking of most viewed pages")
-    links = page.links
+    list_page = wikipedia.page(title=page_to_use)
+    links = list_page.links
+    print("Selecting from : " + list_page.title)
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
@@ -100,8 +116,18 @@ def generate_question():
         try:
             random.seed(69)
             random_page = random.choice(links)
+            # question_page = wikipedia.page(title=random_page,auto_suggest=False)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
-            pageLoaded = True
+            question_page_title = question_page.title
+
+            #Reject a page if the title is too long
+            print("Got here")
+            print(question_page_title)
+
+            if len(question_page.title.split(" ")) < 4:
+                pageLoaded = True
+            else: 
+                pageLoaded = False
         except:
             pageLoaded = False
     
@@ -110,13 +136,14 @@ def generate_question():
 
 
     summary = remove_subject(page_title, question_page.summary)
-    summary = summary.split('. ')[0]
-
-
+    summary = summary.split('.')[0] + "."
 
     print(summary)
 
     return (page_title,summary)
 
-generate_question()
+(answer, summary) = generate_question("weekly 5000")
+#(answer, summary) = generate_question("top annual")
+
+#print(fetch_named_entities(answer))
 
