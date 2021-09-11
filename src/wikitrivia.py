@@ -14,11 +14,11 @@ import nltk
 #Download natural language packages
 path = './nltk_modules'
 nltk.data.path.append(path)
-nltk.download('punkt', download_dir=path)
-nltk.download('wordnet', download_dir=path)
-nltk.download('averaged_perceptron_tagger', download_dir=path)
-nltk.download('maxent_ne_chunker', download_dir=path)
-nltk.download('words', download_dir=path)
+nltk.download('punkt', download_dir=path, quiet=True)
+nltk.download('wordnet', download_dir=path, quiet=True)
+nltk.download('averaged_perceptron_tagger', download_dir=path, quiet=True)
+nltk.download('maxent_ne_chunker', download_dir=path, quiet=True)
+nltk.download('words', download_dir=path, quiet=True)
 
 
 BLANK_SPACE = "______"
@@ -41,13 +41,14 @@ def fetch_named_entities(text):
 def remove_subject(subject, text):
     text = strip_brackets(text)
 
-    subject_list = fetch_named_entities(text)
+    subject_labels = fetch_named_entities(subject)
+    text_labels = fetch_named_entities(text)
 
-    for item in subject_list:
-        if item[0] == 'PERSON': #TODO: Generalise to all types
-            if nltk.corpus.wordnet.synsets(item[1]):
-                #print(item, "!!!!!!!")
-                text = text.replace(item[1], BLANK_SPACE)
+    for item in text_labels:
+        if item[0] == text_labels[0][0]: #TODO: Generalise to all types
+            print(item)
+            #if nltk.corpus.wordnet.synsets(item[1]):
+                #text = text.replace(item[1], BLANK_SPACE)
                     
     subject_split = subject.split(" ")
     for token in subject_split:
@@ -76,6 +77,7 @@ def generate_question():
     pageLoaded = False
     while pageLoaded == False:
         try:
+            random.seed(100)
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
             pageLoaded = True
