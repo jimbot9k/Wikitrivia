@@ -4,7 +4,7 @@ from flask_assets import Environment
 from flask_socketio import SocketIO, emit, join_room, send
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 assets = Environment(app)
 
 # Main home page
@@ -13,28 +13,17 @@ def index():
     if request.method == 'GET':
         return render_template("index.html")    
     else:
+        type = request.form['type']
         playerName = request.form['name']
-        if ((request.form['type']) == 'Join'):
+        roomID = request.form['room']
+        if (type == 'Join'):
             resp = make_response(render_template("play.html", playerName = playerName))
-        elif ((request.form['type']) == 'Create'):
-            resp = make_response(render_template("create.html", playerName = playerName))
+        elif (type == 'Create'):
+            resp = make_response(render_template("play.html", playerName = playerName))
+        resp.set_cookie('roomID', roomID)
         resp.set_cookie('playerName', playerName)
-        return resp
-
-
-# Create lobby page
-@app.route("/create", methods=['GET', 'POST'])
-def create():
-    playerName = request.cookies.get('playerName')
-    if not playerName:
-        return render_template("index.html")
-    if request.method == 'GET':
-        return render_template("create.html", playerName=playerName)
-    else:
-        if ((request.form['type']) == 'Host'):
-            return render_template("play.html")
-        elif ((request.form['type']) == 'Solo'):
-            return render_template("play.html")      
+        resp.set_cookie('type', type)
+        return resp     
 
 # Play game page
 @app.route("/play", methods=['GET', 'POST'])
@@ -47,6 +36,18 @@ def play():
 @socketio.on("connect")
 def on_connect():
     print("connection attempted.")
+
+@socketio.on('createRoom')
+def create_room(json):
+    print(str(json))
+    send(str(json))
+
+@socketio.on('joinGame')
+def join_game(json):
+    print(json['roomID'])
+    print(json['playerName'])
+
+    send(str(json))
 
 
 if __name__ == '__main__':
