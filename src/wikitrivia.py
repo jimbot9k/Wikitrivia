@@ -71,18 +71,24 @@ def get_wrong_answers(page):
     """
     pytrend.build_payload(kw_list = [page])
     related_queries = pytrend.related_queries()
-    wrong_answers = []
+    wrong_answers = {}
 
     for key, value in related_queries[page].items():
-        wrong_answers.extend(value['query'])
+        for answer in value['query']:
+            answer = answer.title()
 
-    for answer in wrong_answers:
-        answer = str(answer)
-        if is_same_type(answer, page) != True or similar(answer, page) > SIMILAR:
-            #print(is_same_type(answer, page),  similar(answer, page) > SIMILAR)
-            wrong_answers.remove(answer)
+            #if is_same_type(answer, page) < SIMILAR and similar(answer, page) < SIMILAR:
+            if similar(answer, page) < SIMILAR:
+                #wrong_answers[answer] = is_same_type(answer, page)
+                #wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1])}
 
-    return wrong_answers
+                wrong_answers.append(answer)
+            #TODO: Tried to implement matching on type, it seems to be too strict ): if anyone has any ideas I can tell them how to fix
+
+
+
+
+    return wrong_answers.keys()
         
 
 
@@ -97,7 +103,9 @@ def strip_brackets(text):
 def fetch_named_entities(text):
     names = []
     for sentence in nltk.sent_tokenize(text):
-        for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sentence))):
+        words = nltk.word_tokenize(sentence)
+
+        for chunk in nltk.ne_chunk(nltk.pos_tag(words)):
             if hasattr(chunk, 'label'):
                 #print(chunk.label(), ' '.join(c[0] for c in chunk))
                 names.append((chunk.label(), chunk[0][0]))
@@ -150,16 +158,18 @@ def remove_subject(subject, text):
     return questions
 
 def is_same_type(a, b):
+
     named_a = fetch_named_entities(a)
     named_b = fetch_named_entities(b)
     if len(named_a) == 0 or len(named_b) == 0:
-        return False
-    for word_a in named_a:
-        for word_b in named_b:
-            if word_a[0] != word_b[0]:
-                print(word_a, "!=", word_b)
-                return False
-    return True
+        return 0
+
+    count = 0
+    for word_a, word_b in named_a, named_b:
+        if word_a[0] == word_b[0]:
+            count += 1
+
+    return count / len(named_b)
 
 
 def is_good_title(title):
@@ -240,8 +250,7 @@ def generate_question(question_set="top annual"):
                 print("Not enough answers", flush=True)
                 continue
 
-                print("Good", flush=True)
-                pageLoaded = True
+            pageLoaded = True
         except:
             pageLoaded = False
 
@@ -261,3 +270,4 @@ def generate_question(question_set="top annual"):
 question = generate_question("weekly 5000")
 print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
+#Maybe add some movies or actors etc pages so you can have specific categories.
