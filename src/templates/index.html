@@ -5,9 +5,11 @@
         </head>
         <body>
             <h1>WikiTrivia</h1>
-            <label for="name"><b>Name</b></label>
-            <input type="text" placeholder="Enter Name" name="name" id="name" required>
-            <button type="join" class="joinBtn">Join</button>
-            <button type="create" class="createBtn">Create</button>
+            <form action ="/" method="POST">
+                <label for="name"><b>Name</b></label>
+                <input type="text" placeholder="Enter Name" name="name" id="name" required>
+                <input type="submit" name="type" value="Join"/>
+                <input type="submit" name="type" value="Create"/>
+            </form>
         </body>
     </html> 

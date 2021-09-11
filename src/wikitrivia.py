@@ -14,7 +14,6 @@ import nltk
 #Download natural language packages
 path = './nltk_modules'
 nltk.data.path.append(path)
-nltk.download('punkt', download_dir=path)
 nltk.download('wordnet', download_dir=path)
 nltk.download('averaged_perceptron_tagger', download_dir=path)
 nltk.download('maxent_ne_chunker', download_dir=path)
@@ -47,6 +46,7 @@ def remove_subject(subject, text):
     for item in subject_list:
         if item[0] == 'PERSON': #TODO: Generalise to all types
             if nltk.corpus.wordnet.synsets(item[1]):
+                #print(item, "!!!!!!!")
                 text = text.replace(item[1], BLANK_SPACE)
                     
     subject_split = subject.split(" ")
@@ -54,6 +54,7 @@ def remove_subject(subject, text):
         text = text.replace(token, BLANK_SPACE)
         
     return text
+
 
 def generate_question():
     """
@@ -81,25 +82,14 @@ def generate_question():
         except:
             pageLoaded = False
     
-    page_title = question_page.title
-    #pageName = wikipedia.random()
-
-    page = wikipedia.page(title='Tupac Shakur')
-    title = page.title
-
-    title = re.sub('\(.*\)', "", title)
-    print(title)
+    page_title = strip_brackets(question_page.title)
+    print(page_title)
 
 
-    summary = question_page.summary
-    
-    summary = summary.replace(question_page.title,"_______")
+    summary = remove_subject(page_title, question_page.summary)
     summary = summary.split('. ')[0]
 
-    print(page_title)
-    #summary = summary.replace(page.title, BLANK_SPACE)
 
-    summary = remove_subject(title, summary)
 
     print(summary)
 
