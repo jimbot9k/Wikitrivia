@@ -12,7 +12,6 @@ import nltk
 #Download natural language packages
 path = './nltk_modules'
 nltk.data.path.append(path)
-nltk.download('punkt', download_dir=path)
 nltk.download('wordnet', download_dir=path)
 nltk.download('averaged_perceptron_tagger', download_dir=path)
 nltk.download('maxent_ne_chunker', download_dir=path)
