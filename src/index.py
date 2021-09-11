@@ -1,13 +1,24 @@
 from flask import Flask, request, render_template, Blueprint, render_template, redirect, url_for, request, flash
 import sqlite3
+from flask_assets import Environment
+from flask_socketio import SocketIO, emit, join_room, send
 
 app = Flask(__name__)
+socketio = SocketIO(app)
+assets = Environment(app)
 
 # Main home page
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        return render_template("index.html")
+        return render_template("index.html")    
+    else:
+        playerName = request.form['name']
+        if ((request.form['type']) == 'Join'):
+            return render_template("join.html", playerName = playerName)
+        elif ((request.form['type']) == 'Create'):
+            return render_template("create.html", playerName = playerName)
+
 
 # Create lobby page
 @app.route("/create", methods=['GET', 'POST'])
@@ -34,6 +45,7 @@ def play():
 def solo():
     if request.method == 'GET':
         return render_template("solo.html")
+    
 
 # Joining wait for host page
 @app.route("/joinWait", methods=['GET', 'POST'])
@@ -47,4 +59,4 @@ def hostWait():
         return render_template("hostWait.html")
 
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app, debug=True)
