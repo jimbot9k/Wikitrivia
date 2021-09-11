@@ -3,7 +3,6 @@
         <head>
             <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/play.css') }}">  
             <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
-            <script src="{{ url_for('static', filename='js/play.js') }}"></script>       
             <title>WikiTrivia</title>
         </head>
         <body>
@@ -15,25 +14,22 @@
                 </div>
                 <div id = "answers">
                     <div id = "topAnswers">
-                        <button id="answer1" class="answerButton">Answer 1</button>
-                        <button id="answer2" class="answerButton">Answer 2</button>
+                        <button id="answer1" class="answerButton" onclick="lol()">Answer 1</button>
+                        <button id="answer2" class="answerButton" onclick="sendAnswer()">Answer 2</button>
                     </div>
                     <div id = "bottomAnswers">
-                        <button id="answer3" class="answerButton">Answer 3</button>
-                        <button id="answer4" class="answerButton">Answer 4</button>
+                        <button id="answer3" class="answerButton" onclick="sendAnswer()">Answer 3</button>
+                        <button id="answer4" class="answerButton" onclick="sendAnswer()">Answer 4</button>
                     </div>
                 </div>
             </div>
 
             <div id = "playerList">
                 <h2 style="margin: 0 0 0 0;">Players:</h2>
-                <ul>
-                    <li>Player 1</li>
-                    <li>Player 2</li>
-                    <li>Player 3</li>
-                </ul> 
+                lol
             </div>
             <div id= "menu">
             </div>
         </body>
+        <script src="{{ url_for('static', filename='js/play.js') }}"></script>       
     </html>
