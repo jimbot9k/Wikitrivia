@@ -40,7 +40,10 @@ def remove_subject(subject, text):
     remove_list = []
     questions = strip_brackets(text)
     subject_split = subject.split(" ")
-    remove_list.extend(subject_split)
+    for string in subject_split:
+        remove_list.append(string)
+        #Case sensitivity
+        remove_list.append(string.lower())
 
     subject_labels = fetch_named_entities(subject)
     text_labels = fetch_named_entities(text)
@@ -114,7 +117,7 @@ def generate_question(question_set="top annual"):
     pageLoaded = False
     while pageLoaded == False:
         try:
-            random.seed(69)
+            random.seed(89)
             random_page = random.choice(links)
             # question_page = wikipedia.page(title=random_page,auto_suggest=False)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
@@ -132,8 +135,6 @@ def generate_question(question_set="top annual"):
             pageLoaded = False
     
     page_title = strip_brackets(question_page.title)
-    print(page_title)
-
 
     summary = remove_subject(page_title, question_page.summary)
     summary = summary.split('.')[0] + "."
