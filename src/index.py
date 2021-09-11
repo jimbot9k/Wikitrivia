@@ -44,5 +44,10 @@ def play():
     if request.method == 'POST':
         pass
 
+@socketio.on("connect")
+def on_connect():
+    print("connection attempted.")
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
