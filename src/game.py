@@ -20,6 +20,9 @@ class Game:
 
         self.currentQuestion = generate_question()
         print(self.currentQuestion.get_question())
+        print(self.currentQuestion.get_answer())
+        print(self.currentQuestion.get_falseAnswers())
+
         self.correctAnswer = random.randint(1,5)
 
     def add_player(self, player):
@@ -33,7 +36,7 @@ class Game:
         answers[self.correctAnswer] = self.get_question().get_answer()
         j = 0
         for i in range(1, 5):
-            if not i == self.correctAnswer:
+            if not (i == self.correctAnswer):
                 answers[i] = self.get_question().get_falseAnswers()[j]
                 j += 1
         return answers
@@ -42,7 +45,12 @@ class Game:
         self.playerAnswers[player] = answer
 
     def get_next_question(self):
-        pass
+        self.currentQuestion = generate_question()
+        print(self.currentQuestion.get_question())
+        print(self.currentQuestion.get_answer())
+        print(self.currentQuestion.get_falseAnswers())
+
+        self.correctAnswer = random.randint(1,5)
 
     def get_player_list(self):
         player_list = ""
