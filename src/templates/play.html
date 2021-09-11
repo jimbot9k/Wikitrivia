@@ -6,6 +6,10 @@
             <title>WikiTrivia</title>
         </head>
         <body>
+            <div id="titleScreen">
+                <img src="{{ url_for('static', filename='img/bouncy.gif') }}" alt="WikiTrivia" id="bouncy">
+                <h1 id="titleScreenText">WikiTrivia</h1>
+            </div>
             <div id = "playScreen"> 
                 <div id = "question">
                     <p id="questionText">This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question? This is a question?
@@ -30,7 +34,20 @@
             </div>
             <div id= "menu">
                 <button id="endButton" class="menuButton" onclick="endRound(roomID)">End Round</button>
+                <select name="questionTypes" id="questionTypes">
+                    <option value="top annual">Top Annual</option>    
+                    <option value="weekly 5000">Weekly 5000</option>    
+                    <option value="top annual">Dark Souls Mode</option>    
+                </select>
+                <div id="clock">
+                    <p id="timer">00:00</p>
+                    <button id="start">Start</button>
+                    <button id="pause">Pause</button>
+                    <button id="resume">Resume</button>
+                </div>
             </div>
+
+
         </body>
         <script src="{{ url_for('static', filename='js/play.js') }}"></script>       
     </html>

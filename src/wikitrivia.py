@@ -30,7 +30,7 @@ SIMILAR = 0.75
 
 TOO_LONG = 4
 
-BAD_SUBJECTS = ['Wikipedia','Wiki']
+BAD_SUBJECTS = ['Wikipedia','Wiki', 'I Ching']
 
 def get_wrong_answers(page):
 
@@ -199,6 +199,7 @@ def generate_question(question_set="top annual"):
         question set: (str)
             - "top annual" : Use the top annual views list
             - "weekly 5000" : Use the weekly top 5000 views list
+            - "random" : Random Questions
 
     -------------------------------------------
     Returns:
@@ -277,7 +278,7 @@ def generate_question(question_set="top annual"):
 
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
-question = generate_question("weekly 5000")
-print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
+#question = generate_question("weekly 5000")
+#print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
 #Maybe add some movies or actors etc pages so you can have specific categories.
