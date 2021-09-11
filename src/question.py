@@ -1,11 +1,10 @@
 """
 Question - A question generated from Wikipedia
 """
-class Question:
+class MultiQuestion:
 
-    def __init__(self, question, content, type, answer, falseAnswers):
+    def __init__(self, question, content, answer, falseAnswers):
         self.question = question
-        self.type = type
         self.content = content
         self.answer = answer
         self.falseAnswers = falseAnswers
@@ -16,9 +15,6 @@ class Question:
     def get_content(self):
         return self.content
     
-    def get_type(self):
-        return self.type
-
     def get_answer(self):
         return self.answer
 

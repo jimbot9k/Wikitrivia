@@ -1,16 +1,18 @@
 """
 """
 #Prerequisites 
+import sys
 import wikipedia
 import random
 import re
 import nltk
 import pandas as pd                        
 from pytrends.request import TrendReq
-pytrend = TrendReq()
 from difflib import SequenceMatcher
+from question import MultiQuestion
 import pandas as pd
 
+pytrend = TrendReq()
 #random.seed(101)
 
 #Download natural language packages
@@ -25,7 +27,66 @@ nltk.download('words', download_dir=path, quiet=True)
 
 BLANK_SPACE = "______"
 
+SIMILAR = 0.6
+
+TOO_LONG = 4
+
 BAD_SUBJECTS = ['Wikipedia','Wiki']
+
+def get_wrong_answers(page):
+
+    """
+    #############################################################
+    # Generating Wrong answers
+    #############################################################
+    #Get the page title and print it
+
+    #Get a list of the page categories
+    page_categories = question_page.categories
+    good_page_categories = []
+    #Get rid of any that are too long (likely bad links)
+    for i,x in enumerate(page_categories):
+        if len(x.split(" ")) <= 2:
+            good_page_categories.append(x)
+    print(good_page_categories)
+
+    #Get the category page
+    category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
+    print(category_page.content)
+
+    wrong_answers =[None, None, None]
+    for i in range(3):
+        alternateFound = False
+        while alternateFound == False:
+            potentialAnswer = random.choice(category_page.links)
+            if len(potentialAnswer.split(" ")) == len(page_title.split(" ")):
+                alternateFound = True
+                wrong_answers[i] = (potentialAnswer)
+        
+    summary = remove_subject(page_title, question_page.summary)
+    try:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+    except:
+        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
+
+    """
+    pytrend.build_payload(kw_list = [page])
+    related_queries = pytrend.related_queries()
+    wrong_answers = []
+
+    for key, value in related_queries[page].items():
+        wrong_answers.extend(value['query'])
+
+    for answer in wrong_answers:
+        answer = str(answer)
+        if is_same_type(answer, page) != True or similar(answer, page) > SIMILAR:
+            #print(is_same_type(answer, page),  similar(answer, page) > SIMILAR)
+            wrong_answers.remove(answer)
+
+    return wrong_answers
+        
+
+
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
@@ -67,8 +128,8 @@ def remove_subject(subject, text):
     for item in text_labels:
         #String similarity check 0.75 arbritrary number
         for token in subject_split:
-            if similar(item[1], token) > 0.75:
-                print(item[1], " : ", token, similar(item[1], token))
+            if similar(item[1], token) > SIMILAR:
+                #print(item[1], " : ", token, similar(item[1], token))
                 remove_list.append(item[1])
 
         if item[0] == text_labels[0][0]:
@@ -92,13 +153,29 @@ def remove_subject(subject, text):
 def is_same_type(a, b):
     named_a = fetch_named_entities(a)
     named_b = fetch_named_entities(b)
+    if len(named_a) == 0 or len(named_b) == 0:
+        return False
     for word_a in named_a:
-        for word_b in named_a:
+        for word_b in named_b:
             if word_a[0] != word_b[0]:
                 print(word_a, "!=", word_b)
                 return False
     return True
 
+
+def is_good_title(title):
+    words = nltk.word_tokenize(title)
+    if len(words) < TOO_LONG:
+        for word in words:
+            if word in BAD_SUBJECTS:
+                print("Bad subject")
+                sys.stdout.flush()
+                return False
+        return True
+    else:
+        print("Too long")
+        sys.stdout.flush()
+        return False
 
 
 def generate_question(question_set="top annual"):
@@ -149,119 +226,33 @@ def generate_question(question_set="top annual"):
 
             random_page = random.choice(links)
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
-            question_page_title = random_page
+            page_title = strip_brackets(question_page.title)
+            print(page_title)
+            wrong_answers = []
 
-            print(random_page)
             #Reject a page if the title is too long
             #words = nltk.word_tokenize(question_page.title)
-            words = nltk.word_tokenize(random_page)
 
-            if len(words) < 4:
-                for word in words:
-                    if word in BAD_SUBJECTS:
-                        pageLoaded = False
-                        break
-                    pageLoaded = True
-            else: 
+            if is_good_title(page_title) != True:
                 pageLoaded = False
+                continue
+
+            wrong_answers = get_wrong_answers(page_title)
+            if len(wrong_answers) > 2:
+                wrong_answers = wrong_answers[0:3]
+            else:
+                pageLoaded = False
+                print("Not enough answers")
+                sys.stdout.flush()
+                continue
+
+                print("!!")
+                sys.stdout.flush()
+                pageLoaded = True
         except:
             pageLoaded = False
 
-    page_title = strip_brackets(random_page)
-    print(random_page)
-
-    
-    '''
-    
-    #############################################################
-    # Generating Wrong answers
-    #############################################################
-    #Get the page title and print it
-
-    #Get a list of the page categories
-    page_categories = question_page.categories
-    good_page_categories = []
-    #Get rid of any that are too long (likely bad links)
-    for i,x in enumerate(page_categories):
-        if len(x.split(" ")) <= 2:
-            good_page_categories.append(x)
-    print(good_page_categories)
-
-    #Get the category page
-    category_page = wikipedia.page(title = "Category:"+good_page_categories[0],auto_suggest=False)
-    print(category_page.content)
-
-    wrong_answers =[None, None, None]
-    for i in range(3):
-        alternateFound = False
-        while alternateFound == False:
-            potentialAnswer = random.choice(category_page.links)
-            if len(potentialAnswer.split(" ")) == len(page_title.split(" ")):
-                alternateFound = True
-                wrong_answers[i] = (potentialAnswer)
-        
     summary = remove_subject(page_title, question_page.summary)
-    try:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
-    except:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
-
-    '''
-
-    summary = remove_subject(page_title, question_page.summary)
-    try:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
-    except:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
-
-    print(question_page_title)
-    #print(wrong_answers[0])
-    #print(wrong_answers[1])
-    #print(wrong_answers[2])
-    print(summary)
-
-    answer_suggestions = pytrend.build_payload(kw_list = [question_page_title])
-    #print(answer_suggestions)
-    related_queries = pytrend.related_queries()
-    #wrong_answers = list(related_queries.values())
-
-    for a,b in related_queries.items():
-        #print(a)
-        #print(" ")
-        wrong_answers = b
-
-    ab = False
-    for a in wrong_answers.items():
-
-        if(ab is True):
-            things = a[1]
-        elif(ab is False):
-            thinger = a[1]
-        ab = True
-
-    related_query_list = things['query'].tolist()
-    related_query_lister = thinger['query'].tolist()
-
-    num_words_title = len(question_page_title.split(" "))
-
-    good_related_list = []
-    for thing in related_query_list:
-        temp = len(thing.split(" "))
-        if(temp == num_words_title):
-            good_related_list.append(thing)
-
-    for thing in related_query_lister:
-        temp = len(thing.split(" "))
-        if(temp == num_words_title):
-            good_related_list.append(thing)
-    
-    print(good_related_list)
-        
-    #print(wrong_answers)
-    #related_queries.values()    
-=======
-        
-    summary = remove_subject(question_page_title, question_page.summary)
 
     splitSummary = nltk.sent_tokenize(summary)
 
@@ -270,13 +261,10 @@ def generate_question(question_set="top annual"):
     except:
         summary = splitSummary[0] + "." + splitSummary[1] + "."
 
-    return (question_page_title,summary)
+    return MultiQuestion(question=summary, content=question_set, answer=page_title, falseAnswers=wrong_answers)
 
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
-(answer, summary) = generate_question("weekly 5000")
-
-
-print(answer)
-print(summary)
+question = generate_question("weekly 5000")
+print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
