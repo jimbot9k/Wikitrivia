@@ -8,6 +8,7 @@ requests = "*"
 wikipedia = "*"
 nltk = "*"
 flask = "*"
+numpy = "*"
 
 [dev-packages]
 pylint = "*"
