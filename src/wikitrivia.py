@@ -6,6 +6,7 @@ Backend for generating questions
 """
 #Prerequisites 
 import wikipedia
+
 import random
 import re
 from wikipedia.wikipedia import WikipediaPage
@@ -93,6 +94,7 @@ def generate_question():
 
 
 
+    summary = remove_subject(title, summary)
     print(summary)
 
     return (page_title,summary)
