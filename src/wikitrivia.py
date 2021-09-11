@@ -97,8 +97,10 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 def strip_brackets(text):
-    #return re.sub('\(.*\)', "", text)
-    return re.sub(r"\([^()]*\)", "", text)
+    return re.sub('\(.*\)', "", text)
+    #return re.sub(r"\([^()]*\)", "", text)
+    #Pretty sure this other one does not work
+
 
 def fetch_named_entities(text):
     names = []
