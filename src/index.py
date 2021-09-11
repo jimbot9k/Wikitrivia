@@ -70,6 +70,11 @@ def join_game(json):
     msg["players"] = games[roomID].get_player_list()
     join_room(roomID)
     emit('updatePlayers', JSON.dumps(msg), to=roomID)
+    msg = {}
+    msg["question"] = games[roomID].get_question().get_question()
+    for answer in games[roomID].get_answers():
+        msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+    emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
 @socketio.on("getPlayers")
 def getPlayers(json):
@@ -90,7 +95,7 @@ def sendAnswer(json):
     playerName = json["playerName"]
     answer = json["answer"]
     if not games[roomID] == None:
-        games[roomID].updateAnswer(playerName, answer)
+        games[roomID].answer_question(playerName, answer)
 
 @socketio.on("endRound")
 def endRound(json):
@@ -100,8 +105,11 @@ def endRound(json):
         msg = {}
         msg["players"] = games[roomID].get_player_list()
         emit('updatePlayers', JSON.dumps(msg), to=roomID)
-        msg["question"] = games[roomID].get_next_question()
-        emit('newQuestion', JSON.dumps(msg), to=roomID)
+        msg = {}
+        msg["question"] = games[roomID].get_question().get_question()
+        for answer in games[roomID].get_answers():
+            msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+        emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
 
 

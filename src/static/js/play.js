@@ -25,15 +25,15 @@ function updateAnswers(answer1, answer2, answer3, answer4) {
     document.getElementById("answer4").innerHTML = answer4;
 }
 
-function endRound(roomID, playerName) {
+function endRound(roomID) {
     console.log("end pls")
     const msg = {roomID:roomID};
-    socket.emit("endRound", msg, to=roomID);
+    socket.emit("endRound", msg);
 }
 
 function sendAnswer(roomID, playerName, option) {
-    const msg = {roomID:roomID, playerName:playerName, option:option};
-    socket.emit("sendAnswer", msg, to=roomid);
+    const msg = {roomID:roomID, playerName:playerName, answer:option};
+    socket.emit("sendAnswer", msg);
 }
 
 function getPlayers(roomID) {
