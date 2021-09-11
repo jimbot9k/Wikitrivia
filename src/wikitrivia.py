@@ -132,15 +132,6 @@ def generate_question(question_set="top annual"):
 
     elif question_set == "random":
         page_to_use = "Fully Random Question -Good luck"
-
-        #Iterate to get a good link
-        gotGoodLink = False
-        while gotGoodLink == False:
-            links = [wikipedia.random()]
-            if len(links[0].split(" ")) < 4 and not ("(" in links[0]):
-                gotGoodLink = True
-        
-        list_page = wikipedia.page(title=links[0])
     else:
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
     
@@ -187,6 +178,7 @@ def generate_question(question_set="top annual"):
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
 (answer, summary) = generate_question("weekly 5000")
+
 
 print(answer)
 print(summary)
