@@ -82,8 +82,18 @@ def remove_subject(subject, text):
     for item in remove_list:
         questions = questions.replace(item, BLANK_SPACE)
 
-                        
     return questions
+
+def is_same_type(a, b):
+    named_a = fetch_named_entities(a)
+    named_b = fetch_named_entities(b)
+    for word_a in named_a:
+        for word_b in named_a:
+            if word_a[0] != word_b[0]:
+                print(word_a, "!=", word_b)
+                return False
+    return True
+
 
 
 def generate_question(question_set="top annual"):
