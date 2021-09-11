@@ -165,10 +165,12 @@ def generate_question(question_set="top annual"):
         
     summary = remove_subject(question_page_title, question_page.summary)
 
+    splitSummary = nltk.sent_tokenize(summary)
+
     try:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "." + summary.split('.')[2] + "."
+        summary = splitSummary[0] + "." + splitSummary[1] + "." + splitSummary[2] + "."
     except:
-        summary = summary.split('.')[0] + "." + summary.split('.')[1] + "."
+        summary = splitSummary[0] + "." + splitSummary[1] + "."
 
     return (question_page_title,summary)
 
