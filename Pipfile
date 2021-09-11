@@ -12,6 +12,7 @@ numpy = "*"
 flask-assets = "*"
 flask-socketio = "*"
 pandas = "*"
+pytrends = "*"
 
 [dev-packages]
 pylint = "*"
