@@ -1,0 +1,99 @@
+body {    
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#playScreen {
+    position: absolute;
+    background: white;
+    width: 70%;
+    height: 80%;
+}
+
+#question {
+    position: absolute;
+    background: white;
+    top: 0;
+    width: 100%;
+    height: 30%;
+}
+
+#questionText {
+    position: relative;
+    margin: 0 0 0 0;
+    color: black;
+    height:100%;
+}
+
+#answers {
+    position: absolute;
+    background: white;
+    top: 30%;
+    width: 100%;
+    height: 70%;
+}
+
+#topAnswers {
+    position: relative;
+    background: white;
+    width: 100%;
+    height: 50%;
+    padding-right: .5%;
+    padding-left: .7%;
+}
+
+#bottomAnswers {
+    position: relative;
+    background: white;
+    width: 100%;
+    height: 50%;
+    padding-right: .5%;
+    padding-left: .7%;
+
+}
+
+.answerButton {
+    position: relative;
+    height: 100%;
+    width: 49%;
+    text-align: center;
+    border-color: black;
+}
+
+#answer1 {
+    background-color: red;
+    color: white;
+}
+
+#answer2 {
+    background-color: blue;
+    color: white;
+}
+
+#answer3 {
+    background-color: green;
+    color: white;
+}
+
+#answer4 {
+    background-color: purple;
+    color: white;
+}
+
+#playerList {
+    position: absolute;
+    left: 70%;
+    width: 30%;
+    height: 100%;
+    color: white;
+    border-color: black;
+    background-color: black;
+}
+
+#menu {
+    position: absolute;
+    top: 80%;
+    width: 70%;
+    height: 20%
+}
+
