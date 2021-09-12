@@ -17,13 +17,15 @@ class Game:
         self.scores = {}
         for player in players:
             self.scores[player] = 0
+        self.correctAnswer = random.randint(1,5)
 
         self.currentQuestion = generate_question()
+        self.oldAnswer = "First Question"
         print(self.currentQuestion.get_question())
+        print(self.correctAnswer)
         print(self.currentQuestion.get_answer())
         print(self.currentQuestion.get_falseAnswers())
 
-        self.correctAnswer = random.randint(1,5)
 
     def add_player(self, player):
         self.players[player] = 0
@@ -32,14 +34,13 @@ class Game:
         return self.currentQuestion
 
     def get_answers(self):
-        answers = {}
-        answers[self.correctAnswer] = self.get_question().get_answer()
+        answers = {1: "Apple", 2:"Pear", 3:"Orange", 4:"UQCS"}
         j = 0
         for i in range(1, 5):
             if ((not (i == self.correctAnswer))):
-                print("{x}:{y}".format(x=j,y=self.get_question().get_falseAnswers()[j]))
-                answers[i] = self.get_question().get_falseAnswers()[j]
+                answers[i] = self.get_question().get_falseAnswers()[j % 3]
                 j += 1
+        answers[self.correctAnswer] = self.get_question().get_answer()
         return answers
     
     def answer_question(self, player, answer):
@@ -64,8 +65,12 @@ class Game:
             if self.playerAnswers[player] == self.correctAnswer:
                 self.players[player] += 1
                 self.playerAnswers[player] = 0
+
+    def get_old_answer(self):
+        return self.oldAnswer
     
     def end_round(self, questionSet):
+        self.oldAnswer = self.get_question().get_answer()
         self.update_scores()
         self.get_next_question(questionSet)
 

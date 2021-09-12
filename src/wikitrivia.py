@@ -70,6 +70,7 @@ def get_wrong_answers(page):
     """
     pytrend.build_payload(kw_list = [page])
     related_queries = pytrend.related_queries()
+    length = len(page.split(" "))
     wrong_answers = {}
 
     for key, value in related_queries[page].items():
@@ -79,7 +80,7 @@ def get_wrong_answers(page):
             #Test to see if subject present in answer and then score how similar its type is (e.g. 'PERSON') then send
             #that sorted list back and the top 3 will be extracted in get_question
             test = remove_subject(page, answer)
-            if similar(test, answer) > SIMILAR:
+            if ((similar(test, answer) > SIMILAR) and length == len(answer.split(" "))):
                 wrong_answers[answer] = is_same_type(answer, page)
 
             wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1], reverse=True)}

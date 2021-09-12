@@ -61,6 +61,7 @@ def create_game(json):
     msg["question"] = games[roomID].get_question().get_question()
     for answer in games[roomID].get_answers():
         msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+    msg["previousAnswer"] = games[roomID].get_old_answer()
     emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
 @socketio.on("joinGame")
@@ -71,6 +72,7 @@ def join_game(json):
     games[roomID].add_player(playerName)
     msg["players"] = games[roomID].get_player_list()
     join_room(roomID)
+    games[roomID].add_player(playerName)
     emit('updatePlayers', JSON.dumps(msg), to=roomID)
     msg = {}
     msg["question"] = games[roomID].get_question().get_question()
@@ -113,7 +115,7 @@ def endRound(json):
         msg["question"] = games[roomID].get_question().get_question()
         for answer in games[roomID].get_answers():
             msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
-        msg["previousAnswer"] = games[roomID].get_question().get_answer()
+        msg["previousAnswer"] = games[roomID].get_old_answer()
         emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
 
