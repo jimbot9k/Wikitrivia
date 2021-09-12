@@ -201,6 +201,7 @@ def generate_question(question_set="top annual"):
             - "weekly 5000" : Use the weekly top 5000 views list
             - "random" : Random Questions
             - "Artists from the 10s" Top music from the 2010s
+            - "grossing animes" Top Grossing Animes
             - "grossing films: 50 Top Grossing Films
 
     -------------------------------------------
@@ -228,6 +229,13 @@ def generate_question(question_set="top annual"):
         table_top_5000 = pd.read_html('https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_2010')
         df = table_top_5000[0]
         articles = df['Artist(s)'].to_list()
+        links = articles
+
+    elif question_set == "grossing animes":
+        page_to_use = "List of highest-grossing anime films"
+        table_top_5000 = pd.read_html('https://en.wikipedia.org/wiki/List_of_highest-grossing_anime_films')
+        df = table_top_5000[0]
+        articles = df['Title'].to_list()
         links = articles
 
     elif question_set == "grossing films":
@@ -302,7 +310,7 @@ def generate_question(question_set="top annual"):
 
 #(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
-#question = generate_question("weekly 5000")
-#print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
+question = generate_question("grossing animes")
+print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
 #Maybe add some movies or actors etc pages so you can have specific categories.
