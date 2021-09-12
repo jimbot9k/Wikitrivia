@@ -2,7 +2,7 @@
 """
 #Prerequisites 
 import wikipedia
-import random
+import random as rd
 import re
 import nltk
 import pandas as pd                        
@@ -249,20 +249,22 @@ def generate_question(question_set="top annual"):
     elif question_set == "random":
         print("Selecting from: " + question_set + " which has unlimited entries")
 
-
-
     #Try load a page and keep trying till you get one
     pageLoaded = False
     while pageLoaded == False:
         try:
+            # Try load a page for any but the random option
             if not (question_set == "random"):
-                random_page = random.choice(links)
-                print(random_page)
+                random_page = rd.choice(links)
+                question_page = wikipedia.page(title=random_page,auto_suggest=False)
+                #print(random_page)
             else:
                 random_page = "Special:Random"
-            question_page = wikipedia.page(title=random_page,auto_suggest=False)
+                question_page = wikipedia.page(title=wikipedia.random(),auto_suggest=False)
+                #print(question_page.title)
+
             page_title = strip_brackets(question_page.title)
-            print(page_title)
+            #print(page_title)
             summary = remove_subject(page_title, question_page.summary)
 
             splitSummary = nltk.sent_tokenize(summary)
@@ -271,14 +273,12 @@ def generate_question(question_set="top annual"):
 
             wrong_answers = []
 
-            #Reject a page if the title is too long
-            #words = nltk.word_tokenize(question_page.title)
-
             if is_good_title(page_title) != True:
                 pageLoaded = False
                 continue
 
             wrong_answers = get_wrong_answers(page_title)
+
             if len(wrong_answers) > 2:
                 wrong_answers = wrong_answers[0:3]
             else:
@@ -290,9 +290,6 @@ def generate_question(question_set="top annual"):
         except:
             pageLoaded = False
 
-
-
-
     try:
         summary = splitSummary[0] +  splitSummary[1] +  splitSummary[2]
     except:
@@ -300,9 +297,8 @@ def generate_question(question_set="top annual"):
 
     return MultiQuestion(question=summary, content=question_set, answer=page_title, falseAnswers=wrong_answers)
 
-#(answer, summary) = generate_question("random")
 #(answer, summary) = generate_question("top annual")
-#question = generate_question("weekly 5000")
-#print(question.question, " : ", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
+# question = generate_question("random")
+# print(question.question, " : \r\n", question.answer, ' or ', question.falseAnswers[0], ' or ', question.falseAnswers[1], ' or ', question.falseAnswers[2])
 
 #Maybe add some movies or actors etc pages so you can have specific categories.
