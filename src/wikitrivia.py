@@ -200,6 +200,7 @@ def generate_question(question_set="top annual"):
             - "top annual" : Use the top annual views list
             - "weekly 5000" : Use the weekly top 5000 views list
             - "random" : Random Questions
+            - "Artists from the 10s" Top music from the 2010s
             - "grossing films: 50 Top Grossing Films
 
     -------------------------------------------
@@ -220,6 +221,13 @@ def generate_question(question_set="top annual"):
         table_top_5000 = pd.read_html('https://en.m.wikipedia.org/wiki/User:West.andrew.g/Popular_pages')
         df = table_top_5000[3]
         articles = df['Article'].to_list()
+        links = articles
+        
+    elif question_set == "Artists from the 10s":
+        page_to_use = "Billboard Year-End Hot 100 singles of 2010"
+        table_top_5000 = pd.read_html('https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_2010')
+        df = table_top_5000[0]
+        articles = df['Artist(s)'].to_list()
         links = articles
 
     elif question_set == "grossing films":
