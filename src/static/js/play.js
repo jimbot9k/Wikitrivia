@@ -18,16 +18,20 @@ function updatePlayers(players) {
     document.getElementById("playerListText").innerHTML = players;
 }
 
-function updateAnswers(answer1, answer2, answer3, answer4) {
+function updateAnswers(answer1, answer2, answer3, answer4, previousAnswer) {
     document.getElementById("answer1").innerHTML = answer1;
     document.getElementById("answer2").innerHTML = answer2;
     document.getElementById("answer3").innerHTML = answer3;
     document.getElementById("answer4").innerHTML = answer4;
+    document.getElementById("previousAnswer").innerHTML = "Previous Answer: " + previousAnswer;
+
 }
 
 function endRound(roomID) {
     console.log("end pls")
-    const msg = {roomID:roomID};
+    const questionSets = document.getElementById("questionTypes")
+    const questionSet = questionSets.options[questionSets.selectedIndex].value;
+    const msg = {roomID:roomID, questionSet:questionSet};
     socket.emit("endRound", msg);
 }
 
@@ -76,8 +80,10 @@ socket.on("updateQuestion", (data) => {
     answer2 = JSON.parse(data)['answer2']
     answer3 = JSON.parse(data)['answer3']
     answer4 = JSON.parse(data)['answer4']
+    previousAnswer = JSON.parse(data)['previousAnswer']
+
     updateQuestion(question)
-    updateAnswers(answer1, answer2, answer3, answer4)
+    updateAnswers(answer1, answer2, answer3, answer4, previousAnswer)
 });
 
 

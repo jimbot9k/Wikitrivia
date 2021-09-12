@@ -200,6 +200,7 @@ def generate_question(question_set="top annual"):
             - "top annual" : Use the top annual views list
             - "weekly 5000" : Use the weekly top 5000 views list
             - "random" : Random Questions
+            - "grossing films: 50 Top Grossing Films
 
     -------------------------------------------
     Returns:
@@ -221,21 +222,36 @@ def generate_question(question_set="top annual"):
         articles = df['Article'].to_list()
         links = articles
 
+    elif question_set == "grossing films":
+        page_to_use = "list_of_highest-grossing-films"
+        table = pd.read_html('https://en.wikipedia.org/wiki/List_of_highest-grossing_films')
+        df = table[0]
+        articles = df['Title'].to_list()
+        links = articles
+
     elif question_set == "random":
         page_to_use = "Fully Random Question -Good luck"
     else:
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
     
+
     print(page_to_use)
-    print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+    if not question_set == "random":
+        print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+    elif question_set == "random":
+        print("Selecting from: " + question_set + " which has unlimited entries")
+
 
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
     while pageLoaded == False:
         try:
-
-            random_page = random.choice(links)
+            if not (question_set == "random"):
+                random_page = random.choice(links)
+                print(random_page)
+            else:
+                random_page = "Special:Random"
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
             page_title = strip_brackets(question_page.title)
             print(page_title)
