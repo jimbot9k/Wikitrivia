@@ -5,7 +5,6 @@ import wikipedia
 import random
 import re
 import nltk
-import pandas as pd                        
 from pytrends.request import TrendReq
 from difflib import SequenceMatcher
 from question import MultiQuestion
