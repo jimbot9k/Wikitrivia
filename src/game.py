@@ -36,7 +36,7 @@ class Game:
         answers[self.correctAnswer] = self.get_question().get_answer()
         j = 0
         for i in range(1, 5):
-            if (not (i == self.correctAnswer)):
+            if ((not (i == self.correctAnswer))):
                 print("{x}:{y}".format(x=j,y=self.get_question().get_falseAnswers()[j]))
                 answers[i] = self.get_question().get_falseAnswers()[j]
                 j += 1
@@ -45,8 +45,8 @@ class Game:
     def answer_question(self, player, answer):
         self.playerAnswers[player] = answer
 
-    def get_next_question(self):
-        self.currentQuestion = generate_question()
+    def get_next_question(self, questionSet):
+        self.currentQuestion = generate_question(questionSet)
         print(self.currentQuestion.get_question())
         print(self.currentQuestion.get_answer())
         print(self.currentQuestion.get_falseAnswers())
@@ -65,7 +65,7 @@ class Game:
                 self.players[player] += 1
                 self.playerAnswers[player] = 0
     
-    def end_round(self):
+    def end_round(self, questionSet):
         self.update_scores()
-        self.get_next_question()
+        self.get_next_question(questionSet)
 
