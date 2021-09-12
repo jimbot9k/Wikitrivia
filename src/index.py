@@ -63,11 +63,6 @@ def create_game(json):
         msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
     emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
-@socketio.on('message')
-def handle_message(data):
-    print('received message: ' + data)
-
-
 @socketio.on("joinGame")
 def join_game(json):
     roomID = json["roomID"]
