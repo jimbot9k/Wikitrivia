@@ -17,7 +17,7 @@ class Game:
         self.scores = {}
         for player in players:
             self.scores[player] = 0
-        self.correctAnswer = random.randint(1,5)
+        self.correctAnswer = random.randint(1,4)
 
         self.currentQuestion = generate_question()
         self.oldAnswer = "First Question"
