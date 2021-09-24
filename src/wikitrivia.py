@@ -25,7 +25,7 @@ nltk.download('words', download_dir=path, quiet=True)
 
 BLANK_SPACE = "______"
 
-SIMILAR = 0.75
+SIMILAR = 0.6
 
 TOO_LONG = 4
 

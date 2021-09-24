@@ -1,8 +1,14 @@
 const URL = "http://localhost:5000";
-const playerName = document.cookie.split(';')[1].split('=')[1]
-const roomID = document.cookie.split(';')[0].split('=')[1]
-const type = document.cookie.split(';')[2].split('=')[1]
+const playerName = getCookie("playerName")
+const roomID = getCookie("roomID")
+const type = getCookie("type")
 const gameRunning = 1
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
 
 
 var socket = io(URL, { autoConnect: false });
