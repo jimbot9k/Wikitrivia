@@ -5,7 +5,6 @@ import wikipedia
 import random
 import re
 import nltk
-import pandas as pd                        
 from pytrends.request import TrendReq
 from difflib import SequenceMatcher
 from question import MultiQuestion
@@ -30,7 +29,7 @@ SIMILAR = 0.75
 
 TOO_LONG = 4
 
-BAD_SUBJECTS = ['Wikipedia','Wiki']
+BAD_SUBJECTS = ['Wikipedia','Wiki', 'I Ching']
 
 def get_wrong_answers(page):
 
@@ -71,6 +70,7 @@ def get_wrong_answers(page):
     """
     pytrend.build_payload(kw_list = [page])
     related_queries = pytrend.related_queries()
+    length = len(page.split(" "))
     wrong_answers = {}
 
     for key, value in related_queries[page].items():
@@ -80,7 +80,7 @@ def get_wrong_answers(page):
             #Test to see if subject present in answer and then score how similar its type is (e.g. 'PERSON') then send
             #that sorted list back and the top 3 will be extracted in get_question
             test = remove_subject(page, answer)
-            if similar(test, answer) > SIMILAR:
+            if ((similar(test, answer) > SIMILAR) and length == len(answer.split(" "))):
                 wrong_answers[answer] = is_same_type(answer, page)
 
             wrong_answers = {k: v for k, v in sorted(wrong_answers.items(), key=lambda item: item[1], reverse=True)}
@@ -199,6 +199,11 @@ def generate_question(question_set="top annual"):
         question set: (str)
             - "top annual" : Use the top annual views list
             - "weekly 5000" : Use the weekly top 5000 views list
+            - "random" : Random Questions
+            - "Artists from the 10s" Top music from the 2010s
+            - "grossing animes" Top Grossing Animes
+            - "Top 100 Books" Top 100 books
+            - "grossing films: 50 Top Grossing Films
 
     -------------------------------------------
     Returns:
@@ -219,22 +224,58 @@ def generate_question(question_set="top annual"):
         df = table_top_5000[3]
         articles = df['Article'].to_list()
         links = articles
+        
+    elif question_set == "Artists from the 10s":
+        page_to_use = "Billboard Year-End Hot 100 singles of 2010"
+        table_top_5000 = pd.read_html('https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_2010')
+        df = table_top_5000[0]
+        articles = df['Artist(s)'].to_list()
+        links = articles
+
+    elif question_set == "grossing animes":
+        page_to_use = "List of highest-grossing anime films"
+        table_top_5000 = pd.read_html('https://en.wikipedia.org/wiki/List_of_highest-grossing_anime_films')
+        df = table_top_5000[0]
+        articles = df['Title'].to_list()
+        links = articles
+
+    elif question_set == "grossing films":
+        page_to_use = "list_of_highest-grossing-films"
+        table = pd.read_html('https://en.wikipedia.org/wiki/List_of_highest-grossing_films')
+        df = table[0]
+        articles = df['Title'].to_list()
+        links = articles
+
+    elif question_set == "Top 100 Books":
+        page_to_use = "List of top book lists"
+        table = pd.read_html('https://en.wikipedia.org/wiki/20th_Century%27s_Greatest_Hits:_100_English-Language_Books_of_Fiction')
+        df = table[0]
+        articles = df['Title'].to_list()
+        links = articles
 
     elif question_set == "random":
         page_to_use = "Fully Random Question -Good luck"
     else:
         page_to_use = "Wikipedia:Multiyear ranking of most viewed pages"
     
+
     print(page_to_use)
-    print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+    if not question_set == "random":
+        print("Selecting from: " + question_set + " which has " + str(len(links)) + " entries")
+    elif question_set == "random":
+        print("Selecting from: " + question_set + " which has unlimited entries")
+
 
 
     #Try load a page and keep trying till you get one
     pageLoaded = False
     while pageLoaded == False:
         try:
-
-            random_page = random.choice(links)
+            if not (question_set == "random"):
+                random_page = random.choice(links)
+                print(random_page)
+            else:
+                random_page = "Special:Random"
             question_page = wikipedia.page(title=random_page,auto_suggest=False)
             page_title = strip_brackets(question_page.title)
             print(page_title)

@@ -23,7 +23,7 @@ def index():
         if (type == "Join"):
             resp = make_response(render_template("play.html", playerName = playerName))
         elif (type == "Create"):
-            resp = make_response(render_template("play.html", playerName = playerName))
+            resp = make_response(render_template("host.html", playerName = playerName))
         resp.set_cookie("roomID", roomID)
         resp.set_cookie("playerName", playerName)
         resp.set_cookie("type", type)
@@ -33,7 +33,10 @@ def index():
 @app.route("/play", methods=["GET", "POST"])
 def play():
     if request.method == "GET":
-        return render_template("play.html")
+        resp = make_response(render_template("play.html"))
+        resp.set_cookie("type", "Join")
+        return resp     
+
     if request.method == "POST":
         pass
 
@@ -58,8 +61,8 @@ def create_game(json):
     msg["question"] = games[roomID].get_question().get_question()
     for answer in games[roomID].get_answers():
         msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+    msg["previousAnswer"] = games[roomID].get_old_answer()
     emit('updateQuestion', JSON.dumps(msg), to=roomID)
-
 
 @socketio.on("joinGame")
 def join_game(json):
@@ -69,6 +72,7 @@ def join_game(json):
     games[roomID].add_player(playerName)
     msg["players"] = games[roomID].get_player_list()
     join_room(roomID)
+    games[roomID].add_player(playerName)
     emit('updatePlayers', JSON.dumps(msg), to=roomID)
     msg = {}
     msg["question"] = games[roomID].get_question().get_question()
@@ -100,8 +104,10 @@ def sendAnswer(json):
 @socketio.on("endRound")
 def endRound(json):
     roomID = json["roomID"]
+    questionSet = json["questionSet"]
+    print(questionSet)
     if not games[roomID] == None:
-        games[roomID].end_round()
+        games[roomID].end_round(questionSet)
         msg = {}
         msg["players"] = games[roomID].get_player_list()
         emit('updatePlayers', JSON.dumps(msg), to=roomID)
@@ -109,6 +115,7 @@ def endRound(json):
         msg["question"] = games[roomID].get_question().get_question()
         for answer in games[roomID].get_answers():
             msg["answer{i}".format(i=answer)] = games[roomID].get_answers()[answer]
+        msg["previousAnswer"] = games[roomID].get_old_answer()
         emit('updateQuestion', JSON.dumps(msg), to=roomID)
 
 
