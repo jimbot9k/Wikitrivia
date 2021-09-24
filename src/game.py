@@ -38,7 +38,7 @@ class Game:
         j = 0
         for i in range(1, 5):
             if ((not (i == self.correctAnswer))):
-                answers[i] = self.get_question().get_falseAnswers()[j % 3]
+                answers[i] = self.get_question().get_falseAnswers()[j % 4]
                 j += 1
         answers[self.correctAnswer] = self.get_question().get_answer()
         return answers
