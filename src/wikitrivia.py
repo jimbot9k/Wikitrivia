@@ -190,7 +190,7 @@ def is_good_title(title):
         return False
 
 
-def generate_question(question_set="top annual"):
+def generate_question(question_set="weekly 5000"):
     """
     Generates a question
 

@@ -1,4 +1,4 @@
-const URL = "http://103.4.234.91:5000";
+const URL = "https://wikitrivia.xyz";
 const playerName = getCookie("playerName")
 const roomID = getCookie("roomID")
 const type = getCookie("type")
