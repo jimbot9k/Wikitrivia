@@ -2,6 +2,8 @@
 
 The aim of the project is to create and automatic trivia question gerator that uses data from wikipedia to generate random questions on demand. 
 
+Play it [here](https://wikitrivia.xyz)
+
 ## Backend 
 
 Python based code that uses the wikipedia python package to generate questions.
